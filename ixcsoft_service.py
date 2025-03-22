@@ -87,7 +87,9 @@ def fetch_clients(status):
                     'login': registro.get('login'),
                     'conexao': registro.get('conexao'),
                     'ultima_conexao_final': registro.get('ultima_conexao_final'),
-                    'id_transmissor': registro.get('id_transmissor')
+                    'id_transmissor': registro.get('id_transmissor'),
+                    'latitude': registro.get('latitude'),
+                    'longitude': registro.get('longitude')
                 }
                 clients.append(client_info)
             

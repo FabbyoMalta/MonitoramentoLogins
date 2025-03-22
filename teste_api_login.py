@@ -48,7 +48,7 @@ def fetch_clients():
     payload = {
             #'grid_param': grid_param,
             'qtype': 'radusuarios.login',
-            'query': 'duarte.julio',
+            'query': '14058heraclito',
             'oper': '=',
             'page': str(page),
             'rp': str(rp),
