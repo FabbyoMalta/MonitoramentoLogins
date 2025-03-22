@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  alert_service:
+    build: ./alert_service
+    ports:
+      - "5002:5002"
+    env_file:
+      - .env
+    restart: always
+
+  ixcsoft_service:
+    build: ./ixcsoft_service
+    ports:
+      - "5001:5001"
+    env_file:
+      - .env
+    restart: always
+
+  monitor_service:
+    build: ./monitor_service
+    depends_on:
+      - ixcsoft_service
+      - alert_service
+      - olt_service
+    env_file:
+      - .env
+    restart: always
+
+  olt_service:
+    build: ./olt_service
+    ports:
+      - "5003:5003"
+    env_file:
+      - .env
+    restart: always
+
