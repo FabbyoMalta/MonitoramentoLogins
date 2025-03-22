@@ -1,0 +1,4 @@
+.env
+output_filtered.json  
+teste_api_login.py  
+teste_olt_onu_status.py
