@@ -8,9 +8,15 @@ import os
 
 load_dotenv()
 
+os.makedirs("logs", exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s'
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.FileHandler("/app/logs/monitor_service.log"),  # Log em arquivo
+        logging.StreamHandler()                 # Log no terminal (stdout)
+    ]
 )
 
 # Parâmetros de configuração para monitoramento

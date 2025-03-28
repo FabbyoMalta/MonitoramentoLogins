@@ -8,11 +8,16 @@ from flask import Flask, request, jsonify
 
 load_dotenv()
 
+os.makedirs("logs", exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s'
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.FileHandler("/app/logs/alert_service.log"),  # Log em arquivo
+        logging.StreamHandler()                 # Log no terminal (stdout)
+    ]
 )
-
 app = Flask(__name__)
 
 # Configurações da API Gupshup (WhatsApp)
@@ -93,15 +98,15 @@ def send_whatsapp_alert(total_clientes, conexao, motivo):
 
     responses = []
     for destination_number in gupshup_destination_numbers:
-        template_payload = {
-            "id": gupshup_template_id,
-            "params": template_params
-        }
-
         payload = {
             'source': gupshup_source_number,
             'destination': destination_number,
-            'template': json.dumps(template_payload)
+            'template': json.dumps({
+                'id': gupshup_template_id,
+                'params': template_params
+            }),
+            'channel': 'whatsapp',
+            'message': '',
         }
 
         try:
@@ -109,15 +114,16 @@ def send_whatsapp_alert(total_clientes, conexao, motivo):
             response = requests.post(url, data=payload, headers=headers_whatsapp)
             logging.info(f"Resposta da API WhatsApp: {response.status_code} - {response.text}")
             response.raise_for_status()
+
             data = response.json()
             if data.get('status') == 'submitted':
                 logging.info(f"✅ WhatsApp enviado para {destination_number}")
                 responses.append({'destination': destination_number, 'message': 'Enviado com sucesso'})
             else:
-                logging.error(f"❌ Falha envio WhatsApp: {data.get('message')}")
+                logging.error(f"⚠️ Falha para {destination_number}: {data.get('message')}")
                 responses.append({'destination': destination_number, 'error': data.get('message')})
         except requests.exceptions.RequestException as e:
-            logging.error(f"❌ Erro ao enviar WhatsApp: {e}")
+            logging.error(f"Erro ao enviar mensagem via WhatsApp para {destination_number}: {e}")
             responses.append({'destination': destination_number, 'error': str(e)})
 
     return responses

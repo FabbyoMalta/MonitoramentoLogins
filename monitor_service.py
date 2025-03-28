@@ -11,6 +11,10 @@ load_dotenv()
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [%(levelname)s] %(message)s'
+    handlers=[
+        logging.FileHandler("logs/monitoramento.log"),  # Caminho relativo ao /app
+        logging.StreamHandler()
+    ]
 )
 
 # Parâmetros de configuração para monitoramento

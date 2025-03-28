@@ -9,9 +9,15 @@ from dotenv import load_dotenv
 # Carregar variáveis de ambiente
 load_dotenv()
 
+os.makedirs("logs", exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s'
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.FileHandler("/app/logs/olt_service.log"),  # Log em arquivo
+        logging.StreamHandler()                 # Log no terminal (stdout)
+    ]
 )
 
 app = Flask(__name__)

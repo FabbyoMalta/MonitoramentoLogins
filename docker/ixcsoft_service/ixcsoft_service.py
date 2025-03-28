@@ -12,9 +12,15 @@ from flask import Flask, request, jsonify
 load_dotenv()
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+os.makedirs("logs", exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s'
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.FileHandler("/app/logs/ixcsoft_service.log"),  # Log em arquivo
+        logging.StreamHandler()                 # Log no terminal (stdout)
+    ]
 )
 
 # Obter configurações da API IXCSoft
