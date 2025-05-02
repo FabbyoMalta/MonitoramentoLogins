@@ -5,7 +5,7 @@ services:
     environment:
       - TZ=America/Sao_Paulo
     volumes:
-      - /opt/MonitoramentoLogins/docker/logs/alert_service:/app/logs
+      - /opt/MonitoramentoLogins/logs/alert_service:/app/logs
     ports:
       - "5002:5002"
     env_file:
@@ -17,7 +17,7 @@ services:
     environment:
       - TZ=America/Sao_Paulo
     volumes:
-      - /opt/MonitoramentoLogins/docker/logs/ixcsoft_service:/app/logs
+      - /opt/MonitoramentoLogins/logs/ixcsoft_service:/app/logs
     ports:
       - "5001:5001"
     env_file:
@@ -29,7 +29,7 @@ services:
     environment:
       - TZ=America/Sao_Paulo
     volumes:
-      - /opt/MonitoramentoLogins/docker/logs/monitor_service:/app/logs
+      - /opt/MonitoramentoLogins/logs/monitor_service:/app/logs
     depends_on:
       - ixcsoft_service
       - alert_service
@@ -43,7 +43,7 @@ services:
     environment:
       - TZ=America/Sao_Paulo
     volumes:
-      - /opt/MonitoramentoLogins/docker/logs/olt_service:/app/logs
+      - /opt/MonitoramentoLogins/logs/olt_service:/app/logs
     ports:
       - "5003:5003"
     env_file:
@@ -54,7 +54,7 @@ services:
     build: ./telegram_bot
     restart: always
     volumes:
-      - /opt/MonitoramentoLogins/docker/logs/telegram_bot:/app/logs
+      - /opt/MonitoramentoLogins/logs/telegram_bot:/app/logs
     env_file:
       - .env
 
