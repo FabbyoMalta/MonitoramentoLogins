@@ -1,0 +1,893 @@
+2025-05-02 17:44:13,023 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5002
+ * Running on http://172.18.0.4:5002
+2025-05-02 17:44:13,024 [INFO] [33mPress CTRL+C to quit[0m
+2025-05-03 09:27:23,582 [INFO] 172.18.0.1 - - [03/May/2025 09:27:23] "[33mGET / HTTP/1.1[0m" 404 -
+2025-05-04 09:05:27,832 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 09:05:27,834 [INFO] 172.18.0.6 - - [04/May/2025 09:05:27] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 09:05:27,842 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997000258",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"33\", \"OLT-HW-CB-C2-P53205\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:05:28,960 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"5198fe05-41c3-4d88-b396-3802e12f53ab"}
+2025-05-04 09:05:28,961 [INFO] ✅ WhatsApp enviado para 5527997000258
+2025-05-04 09:05:28,962 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527996462386",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"33\", \"OLT-HW-CB-C2-P53205\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:05:30,072 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"57df45d8-b9cd-4b77-a3e4-33ebc87e1d8d"}
+2025-05-04 09:05:30,073 [INFO] ✅ WhatsApp enviado para 5527996462386
+2025-05-04 09:05:30,073 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527998571827",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"33\", \"OLT-HW-CB-C2-P53205\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:05:31,188 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"5ea59e83-4c9f-43cd-98a2-531748a66038"}
+2025-05-04 09:05:31,188 [INFO] ✅ WhatsApp enviado para 5527998571827
+2025-05-04 09:05:31,189 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "27996067609",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"33\", \"OLT-HW-CB-C2-P53205\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:05:32,307 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"baeb5519-2336-4b04-aedb-747606f8ccbf"}
+2025-05-04 09:05:32,308 [INFO] ✅ WhatsApp enviado para 27996067609
+2025-05-04 09:05:32,308 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527995048500",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"33\", \"OLT-HW-CB-C2-P53205\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:05:33,421 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"fdc1ac6b-783a-408e-8ef7-7a10513931be"}
+2025-05-04 09:05:33,422 [INFO] ✅ WhatsApp enviado para 5527995048500
+2025-05-04 09:05:33,422 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997553252",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"33\", \"OLT-HW-CB-C2-P53205\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:05:34,551 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"d948f2bd-a101-4f28-be0b-dc55736f962a"}
+2025-05-04 09:05:34,551 [INFO] ✅ WhatsApp enviado para 5527997553252
+2025-05-04 09:05:34,551 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527999288981",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"33\", \"OLT-HW-CB-C2-P53205\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:05:35,663 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"c265e74c-f2c3-4b49-adbf-7b7810ebdef0"}
+2025-05-04 09:05:35,664 [INFO] ✅ WhatsApp enviado para 5527999288981
+2025-05-04 09:05:35,665 [INFO] 172.18.0.6 - - [04/May/2025 09:05:35] "POST /alerta/whatsapp HTTP/1.1" 200 -
+2025-05-04 09:06:00,703 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 09:06:00,705 [INFO] 172.18.0.6 - - [04/May/2025 09:06:00] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 09:06:00,713 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997000258",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"45\", \"OLT-HW-CB-C2-P33203\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:06:01,831 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"6af6172f-0a00-4b96-b99a-d5c59987f005"}
+2025-05-04 09:06:01,831 [INFO] ✅ WhatsApp enviado para 5527997000258
+2025-05-04 09:06:01,832 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527996462386",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"45\", \"OLT-HW-CB-C2-P33203\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:06:02,940 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"e80e45a9-272c-4ab1-9e1d-2c4c8fc293a5"}
+2025-05-04 09:06:02,940 [INFO] ✅ WhatsApp enviado para 5527996462386
+2025-05-04 09:06:02,941 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527998571827",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"45\", \"OLT-HW-CB-C2-P33203\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:06:04,050 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"c21eb698-e069-42c5-8f6c-38f3a76195ef"}
+2025-05-04 09:06:04,050 [INFO] ✅ WhatsApp enviado para 5527998571827
+2025-05-04 09:06:04,051 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "27996067609",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"45\", \"OLT-HW-CB-C2-P33203\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:06:05,169 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"3662542b-4ecf-4a43-94f1-b0455fa42a4e"}
+2025-05-04 09:06:05,169 [INFO] ✅ WhatsApp enviado para 27996067609
+2025-05-04 09:06:05,170 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527995048500",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"45\", \"OLT-HW-CB-C2-P33203\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:06:06,279 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"9bb2d10b-1768-478b-991c-86e216eaa276"}
+2025-05-04 09:06:06,280 [INFO] ✅ WhatsApp enviado para 5527995048500
+2025-05-04 09:06:06,280 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997553252",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"45\", \"OLT-HW-CB-C2-P33203\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:06:07,387 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"253dd5a9-3165-42df-bf94-15c316c6d90b"}
+2025-05-04 09:06:07,388 [INFO] ✅ WhatsApp enviado para 5527997553252
+2025-05-04 09:06:07,388 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527999288981",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"45\", \"OLT-HW-CB-C2-P33203\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:06:08,497 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"56e86130-4b95-4776-91ea-a46478540972"}
+2025-05-04 09:06:08,497 [INFO] ✅ WhatsApp enviado para 5527999288981
+2025-05-04 09:06:08,499 [INFO] 172.18.0.6 - - [04/May/2025 09:06:08] "POST /alerta/whatsapp HTTP/1.1" 200 -
+2025-05-04 09:06:33,709 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 09:06:33,711 [INFO] 172.18.0.6 - - [04/May/2025 09:06:33] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 09:06:33,722 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997000258",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"18\", \"OLT-HW-CB-C3-P143314\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:06:34,834 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"6b58381d-7a52-40ad-9d35-e688500639e4"}
+2025-05-04 09:06:34,835 [INFO] ✅ WhatsApp enviado para 5527997000258
+2025-05-04 09:06:34,836 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527996462386",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"18\", \"OLT-HW-CB-C3-P143314\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:06:35,952 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"5a0c449c-0f6f-4def-8b39-a2aa7939fcd0"}
+2025-05-04 09:06:35,953 [INFO] ✅ WhatsApp enviado para 5527996462386
+2025-05-04 09:06:35,953 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527998571827",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"18\", \"OLT-HW-CB-C3-P143314\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:06:37,060 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"17b37b13-0dfc-457e-8074-a89860c0ef2a"}
+2025-05-04 09:06:37,061 [INFO] ✅ WhatsApp enviado para 5527998571827
+2025-05-04 09:06:37,061 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "27996067609",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"18\", \"OLT-HW-CB-C3-P143314\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:06:38,177 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"dfb7cc20-c1a5-4a39-ad1b-6dddb7eac893"}
+2025-05-04 09:06:38,177 [INFO] ✅ WhatsApp enviado para 27996067609
+2025-05-04 09:06:38,177 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527995048500",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"18\", \"OLT-HW-CB-C3-P143314\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:06:39,294 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"340c5976-93dd-4e76-a50a-49305ca39bcf"}
+2025-05-04 09:06:39,294 [INFO] ✅ WhatsApp enviado para 5527995048500
+2025-05-04 09:06:39,295 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997553252",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"18\", \"OLT-HW-CB-C3-P143314\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:06:40,405 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"f0ed30cf-fcee-41b4-8fc9-5a4ba22a203a"}
+2025-05-04 09:06:40,405 [INFO] ✅ WhatsApp enviado para 5527997553252
+2025-05-04 09:06:40,406 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527999288981",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"18\", \"OLT-HW-CB-C3-P143314\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:06:41,519 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"45423e56-dc03-417c-8604-d3bcc53857f0"}
+2025-05-04 09:06:41,519 [INFO] ✅ WhatsApp enviado para 5527999288981
+2025-05-04 09:06:41,521 [INFO] 172.18.0.6 - - [04/May/2025 09:06:41] "POST /alerta/whatsapp HTTP/1.1" 200 -
+2025-05-04 09:07:06,667 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 09:07:06,668 [INFO] 172.18.0.6 - - [04/May/2025 09:07:06] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 09:07:06,676 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997000258",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"11\", \"OLT-HW-CB-C3-P03100\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:07:07,793 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"8ae7a50e-833d-4b26-bc73-9a9700fec0bf"}
+2025-05-04 09:07:07,793 [INFO] ✅ WhatsApp enviado para 5527997000258
+2025-05-04 09:07:07,794 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527996462386",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"11\", \"OLT-HW-CB-C3-P03100\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:07:08,903 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"171d2899-cf68-4ff5-8bf9-99190e0632dc"}
+2025-05-04 09:07:08,903 [INFO] ✅ WhatsApp enviado para 5527996462386
+2025-05-04 09:07:08,904 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527998571827",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"11\", \"OLT-HW-CB-C3-P03100\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:07:10,015 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"552b8536-8e37-4c77-8af6-c3645f11ffe7"}
+2025-05-04 09:07:10,015 [INFO] ✅ WhatsApp enviado para 5527998571827
+2025-05-04 09:07:10,015 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "27996067609",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"11\", \"OLT-HW-CB-C3-P03100\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:07:11,142 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"2c413acb-23b8-4860-844f-66d425bc8245"}
+2025-05-04 09:07:11,142 [INFO] ✅ WhatsApp enviado para 27996067609
+2025-05-04 09:07:11,143 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527995048500",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"11\", \"OLT-HW-CB-C3-P03100\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:07:12,262 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"307472f0-f724-40e8-8dc4-dd14825c473f"}
+2025-05-04 09:07:12,262 [INFO] ✅ WhatsApp enviado para 5527995048500
+2025-05-04 09:07:12,262 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997553252",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"11\", \"OLT-HW-CB-C3-P03100\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:07:13,378 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"3ad0679f-6773-44c4-acef-2dfff24fec7a"}
+2025-05-04 09:07:13,379 [INFO] ✅ WhatsApp enviado para 5527997553252
+2025-05-04 09:07:13,379 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527999288981",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"11\", \"OLT-HW-CB-C3-P03100\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:07:14,501 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"e20bda4d-0fa1-4863-8204-e5491c8433bd"}
+2025-05-04 09:07:14,501 [INFO] ✅ WhatsApp enviado para 5527999288981
+2025-05-04 09:07:14,503 [INFO] 172.18.0.6 - - [04/May/2025 09:07:14] "POST /alerta/whatsapp HTTP/1.1" 200 -
+2025-05-04 09:07:39,628 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 09:07:39,630 [INFO] 172.18.0.6 - - [04/May/2025 09:07:39] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 09:07:39,639 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997000258",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"9\", \"OLT-HW-CB-C2-P73207\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:07:40,750 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"afdd5f5a-048b-4cb3-9313-a79d6bef49b0"}
+2025-05-04 09:07:40,750 [INFO] ✅ WhatsApp enviado para 5527997000258
+2025-05-04 09:07:40,751 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527996462386",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"9\", \"OLT-HW-CB-C2-P73207\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:07:41,866 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"63c75b00-fb1d-4c58-a95c-f00e5cf4cb7c"}
+2025-05-04 09:07:41,866 [INFO] ✅ WhatsApp enviado para 5527996462386
+2025-05-04 09:07:41,867 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527998571827",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"9\", \"OLT-HW-CB-C2-P73207\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:07:42,979 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"c4dd051b-ae73-4356-9586-f6373949ebc6"}
+2025-05-04 09:07:42,980 [INFO] ✅ WhatsApp enviado para 5527998571827
+2025-05-04 09:07:42,980 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "27996067609",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"9\", \"OLT-HW-CB-C2-P73207\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:07:44,086 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"437e90ef-a012-4e31-a8d2-c756ae2fc458"}
+2025-05-04 09:07:44,087 [INFO] ✅ WhatsApp enviado para 27996067609
+2025-05-04 09:07:44,088 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527995048500",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"9\", \"OLT-HW-CB-C2-P73207\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:07:45,199 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"896b23a9-a246-4b58-950f-a02015522db0"}
+2025-05-04 09:07:45,200 [INFO] ✅ WhatsApp enviado para 5527995048500
+2025-05-04 09:07:45,200 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997553252",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"9\", \"OLT-HW-CB-C2-P73207\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:07:46,320 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"48f2cc12-f608-4294-b6ea-e196b15e520a"}
+2025-05-04 09:07:46,321 [INFO] ✅ WhatsApp enviado para 5527997553252
+2025-05-04 09:07:46,321 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527999288981",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"9\", \"OLT-HW-CB-C2-P73207\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 09:07:47,433 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"eacedb4c-0cfa-4de6-96dc-c821b2b73d4f"}
+2025-05-04 09:07:47,433 [INFO] ✅ WhatsApp enviado para 5527999288981
+2025-05-04 09:07:47,435 [INFO] 172.18.0.6 - - [04/May/2025 09:07:47] "POST /alerta/whatsapp HTTP/1.1" 200 -
+2025-05-04 09:10:20,652 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 09:10:20,654 [INFO] 172.18.0.6 - - [04/May/2025 09:10:20] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 09:10:21,438 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 09:10:21,440 [INFO] 172.18.0.6 - - [04/May/2025 09:10:21] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 09:10:22,245 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 09:10:22,247 [INFO] 172.18.0.6 - - [04/May/2025 09:10:22] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 09:10:23,042 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 09:10:23,044 [INFO] 172.18.0.6 - - [04/May/2025 09:10:23] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 09:10:23,824 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 09:10:23,826 [INFO] 172.18.0.6 - - [04/May/2025 09:10:23] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 15:21:52,127 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 15:21:52,129 [INFO] 172.18.0.6 - - [04/May/2025 15:21:52] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 15:21:52,137 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997000258",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"9\", \"OLT-HW-CB-C3-P53305\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:21:53,250 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"ce9d54c7-158e-4eaa-8f49-e219517e896f"}
+2025-05-04 15:21:53,250 [INFO] ✅ WhatsApp enviado para 5527997000258
+2025-05-04 15:21:53,251 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527996462386",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"9\", \"OLT-HW-CB-C3-P53305\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:21:54,360 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"fd859e3b-b436-4e43-beb7-c9c3b639464a"}
+2025-05-04 15:21:54,360 [INFO] ✅ WhatsApp enviado para 5527996462386
+2025-05-04 15:21:54,361 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527998571827",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"9\", \"OLT-HW-CB-C3-P53305\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:21:55,485 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"7a80b1d8-8278-45b3-a58c-d4bfb804ea98"}
+2025-05-04 15:21:55,485 [INFO] ✅ WhatsApp enviado para 5527998571827
+2025-05-04 15:21:55,486 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "27996067609",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"9\", \"OLT-HW-CB-C3-P53305\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:21:56,596 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"e255961e-f1d6-4216-b34b-849ffaa6a8b0"}
+2025-05-04 15:21:56,596 [INFO] ✅ WhatsApp enviado para 27996067609
+2025-05-04 15:21:56,597 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527995048500",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"9\", \"OLT-HW-CB-C3-P53305\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:21:57,705 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"d7e46d4d-2dfa-4984-a689-b58b32ffb11a"}
+2025-05-04 15:21:57,706 [INFO] ✅ WhatsApp enviado para 5527995048500
+2025-05-04 15:21:57,707 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997553252",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"9\", \"OLT-HW-CB-C3-P53305\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:21:58,838 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"93408094-87af-4acd-9ebb-0e14ca1a0866"}
+2025-05-04 15:21:58,838 [INFO] ✅ WhatsApp enviado para 5527997553252
+2025-05-04 15:21:58,839 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527999288981",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"9\", \"OLT-HW-CB-C3-P53305\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:21:59,950 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"7b329fa8-09ab-42a0-ad32-7be324870864"}
+2025-05-04 15:21:59,951 [INFO] ✅ WhatsApp enviado para 5527999288981
+2025-05-04 15:21:59,952 [INFO] 172.18.0.6 - - [04/May/2025 15:21:59] "POST /alerta/whatsapp HTTP/1.1" 200 -
+2025-05-04 15:22:25,118 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 15:22:25,120 [INFO] 172.18.0.6 - - [04/May/2025 15:22:25] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 15:22:25,128 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997000258",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"14\", \"PPPoE-OLT-CB1 =3D5BC0/P1 - VLAN2013=3D5D2013\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:22:26,242 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"ec355a03-3577-43ab-beee-40e5ecd01941"}
+2025-05-04 15:22:26,243 [INFO] ✅ WhatsApp enviado para 5527997000258
+2025-05-04 15:22:26,243 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527996462386",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"14\", \"PPPoE-OLT-CB1 =3D5BC0/P1 - VLAN2013=3D5D2013\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:22:27,352 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"202e4217-496e-4270-8e67-7a09eb5a2213"}
+2025-05-04 15:22:27,353 [INFO] ✅ WhatsApp enviado para 5527996462386
+2025-05-04 15:22:27,353 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527998571827",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"14\", \"PPPoE-OLT-CB1 =3D5BC0/P1 - VLAN2013=3D5D2013\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:22:28,464 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"eaf34465-83ea-4277-8341-144b8ab5848a"}
+2025-05-04 15:22:28,465 [INFO] ✅ WhatsApp enviado para 5527998571827
+2025-05-04 15:22:28,466 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "27996067609",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"14\", \"PPPoE-OLT-CB1 =3D5BC0/P1 - VLAN2013=3D5D2013\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:22:29,582 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"6788127a-d2f1-4677-9504-2bb983a07e65"}
+2025-05-04 15:22:29,583 [INFO] ✅ WhatsApp enviado para 27996067609
+2025-05-04 15:22:29,584 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527995048500",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"14\", \"PPPoE-OLT-CB1 =3D5BC0/P1 - VLAN2013=3D5D2013\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:22:30,695 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"620aa550-0f60-4940-9ace-1da2604c1724"}
+2025-05-04 15:22:30,695 [INFO] ✅ WhatsApp enviado para 5527995048500
+2025-05-04 15:22:30,695 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997553252",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"14\", \"PPPoE-OLT-CB1 =3D5BC0/P1 - VLAN2013=3D5D2013\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:22:31,808 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"ba9b9d2c-6d55-4df4-b9a5-0baa59a95313"}
+2025-05-04 15:22:31,808 [INFO] ✅ WhatsApp enviado para 5527997553252
+2025-05-04 15:22:31,808 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527999288981",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"14\", \"PPPoE-OLT-CB1 =3D5BC0/P1 - VLAN2013=3D5D2013\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:22:32,920 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"4f1e88d0-183d-4ec5-a413-ba01b2463091"}
+2025-05-04 15:22:32,921 [INFO] ✅ WhatsApp enviado para 5527999288981
+2025-05-04 15:22:32,922 [INFO] 172.18.0.6 - - [04/May/2025 15:22:32] "POST /alerta/whatsapp HTTP/1.1" 200 -
+2025-05-04 15:22:58,065 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 15:22:58,067 [INFO] 172.18.0.6 - - [04/May/2025 15:22:58] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 15:22:58,074 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997000258",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"26\", \"OLT-HW-CB-C3-P63306\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:22:59,181 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"ebd6febc-94f8-4945-be25-feaa7ce8deca"}
+2025-05-04 15:22:59,181 [INFO] ✅ WhatsApp enviado para 5527997000258
+2025-05-04 15:22:59,182 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527996462386",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"26\", \"OLT-HW-CB-C3-P63306\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:23:00,291 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"e02519da-bf12-4ac4-8766-1bc2e32ffb73"}
+2025-05-04 15:23:00,291 [INFO] ✅ WhatsApp enviado para 5527996462386
+2025-05-04 15:23:00,292 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527998571827",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"26\", \"OLT-HW-CB-C3-P63306\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:23:01,407 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"e6ffb39f-97d5-4bba-a0fb-8677643cdcd6"}
+2025-05-04 15:23:01,408 [INFO] ✅ WhatsApp enviado para 5527998571827
+2025-05-04 15:23:01,408 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "27996067609",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"26\", \"OLT-HW-CB-C3-P63306\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:23:02,523 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"39da303f-cda4-48ff-bb7d-f8de2395d9c4"}
+2025-05-04 15:23:02,523 [INFO] ✅ WhatsApp enviado para 27996067609
+2025-05-04 15:23:02,524 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527995048500",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"26\", \"OLT-HW-CB-C3-P63306\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:23:03,637 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"9b67102e-9df6-4588-961d-13ce62d0b47c"}
+2025-05-04 15:23:03,638 [INFO] ✅ WhatsApp enviado para 5527995048500
+2025-05-04 15:23:03,638 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997553252",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"26\", \"OLT-HW-CB-C3-P63306\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:23:04,770 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"f6780d2e-f439-4caf-85ec-7b9e8bb1c803"}
+2025-05-04 15:23:04,771 [INFO] ✅ WhatsApp enviado para 5527997553252
+2025-05-04 15:23:04,771 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527999288981",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"26\", \"OLT-HW-CB-C3-P63306\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:23:05,881 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"391b10c6-af07-46a4-adc3-e14cad98c1c0"}
+2025-05-04 15:23:05,881 [INFO] ✅ WhatsApp enviado para 5527999288981
+2025-05-04 15:23:05,883 [INFO] 172.18.0.6 - - [04/May/2025 15:23:05] "POST /alerta/whatsapp HTTP/1.1" 200 -
+2025-05-04 15:23:31,058 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 15:23:31,059 [INFO] 172.18.0.6 - - [04/May/2025 15:23:31] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 15:23:31,068 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997000258",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"28\", \"OLT-HW-CB-C3-P43304\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:23:32,200 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"4538830b-7442-4a53-9ee4-38d53ce0a8c8"}
+2025-05-04 15:23:32,201 [INFO] ✅ WhatsApp enviado para 5527997000258
+2025-05-04 15:23:32,201 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527996462386",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"28\", \"OLT-HW-CB-C3-P43304\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:23:33,308 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"9a75161c-f10d-4aee-851d-1cd252d62e82"}
+2025-05-04 15:23:33,308 [INFO] ✅ WhatsApp enviado para 5527996462386
+2025-05-04 15:23:33,309 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527998571827",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"28\", \"OLT-HW-CB-C3-P43304\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:23:34,426 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"80e685d2-2f9a-477e-b626-1f3856c1aadf"}
+2025-05-04 15:23:34,427 [INFO] ✅ WhatsApp enviado para 5527998571827
+2025-05-04 15:23:34,427 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "27996067609",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"28\", \"OLT-HW-CB-C3-P43304\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:23:35,558 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"e12293ae-0f2a-4c55-bcf3-475208ee79a3"}
+2025-05-04 15:23:35,558 [INFO] ✅ WhatsApp enviado para 27996067609
+2025-05-04 15:23:35,558 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527995048500",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"28\", \"OLT-HW-CB-C3-P43304\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:23:36,665 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"25e92bc7-c793-44c8-9c8f-1a742b29ad28"}
+2025-05-04 15:23:36,665 [INFO] ✅ WhatsApp enviado para 5527995048500
+2025-05-04 15:23:36,666 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997553252",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"28\", \"OLT-HW-CB-C3-P43304\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:23:37,793 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"861c2044-b8bb-485f-a132-8d98bc7c1ca8"}
+2025-05-04 15:23:37,794 [INFO] ✅ WhatsApp enviado para 5527997553252
+2025-05-04 15:23:37,795 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527999288981",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"28\", \"OLT-HW-CB-C3-P43304\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:23:38,910 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"c58b96a8-c501-44bc-90bd-6e02a6dc8fb3"}
+2025-05-04 15:23:38,911 [INFO] ✅ WhatsApp enviado para 5527999288981
+2025-05-04 15:23:38,912 [INFO] 172.18.0.6 - - [04/May/2025 15:23:38] "POST /alerta/whatsapp HTTP/1.1" 200 -
+2025-05-04 15:24:04,044 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 15:24:04,045 [INFO] 172.18.0.6 - - [04/May/2025 15:24:04] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 15:24:04,053 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997000258",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"16\", \"OLT-HW-CB-C3-P13301\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:24:05,165 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"3c16009c-e6c9-464d-a7fb-545187ddb478"}
+2025-05-04 15:24:05,165 [INFO] ✅ WhatsApp enviado para 5527997000258
+2025-05-04 15:24:05,166 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527996462386",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"16\", \"OLT-HW-CB-C3-P13301\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:24:06,300 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"8d8bb873-78a7-4610-9db2-fa9af3b2b4b5"}
+2025-05-04 15:24:06,301 [INFO] ✅ WhatsApp enviado para 5527996462386
+2025-05-04 15:24:06,301 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527998571827",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"16\", \"OLT-HW-CB-C3-P13301\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:24:07,406 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"9b45bda7-ef23-464d-9aeb-c11880b74d66"}
+2025-05-04 15:24:07,406 [INFO] ✅ WhatsApp enviado para 5527998571827
+2025-05-04 15:24:07,407 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "27996067609",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"16\", \"OLT-HW-CB-C3-P13301\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:24:08,522 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"8aee5b7c-7ae2-482d-8e70-8373ddaa6226"}
+2025-05-04 15:24:08,523 [INFO] ✅ WhatsApp enviado para 27996067609
+2025-05-04 15:24:08,523 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527995048500",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"16\", \"OLT-HW-CB-C3-P13301\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:24:09,661 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"c4bf034b-a9a5-459e-9bcf-c2468fe77182"}
+2025-05-04 15:24:09,661 [INFO] ✅ WhatsApp enviado para 5527995048500
+2025-05-04 15:24:09,662 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997553252",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"16\", \"OLT-HW-CB-C3-P13301\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:24:10,774 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"d46908b6-d171-4e2d-af37-091859e5569e"}
+2025-05-04 15:24:10,775 [INFO] ✅ WhatsApp enviado para 5527997553252
+2025-05-04 15:24:10,775 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527999288981",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"16\", \"OLT-HW-CB-C3-P13301\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:24:11,890 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"3e60c1d4-f2d4-43f2-b977-35e870af78a6"}
+2025-05-04 15:24:11,890 [INFO] ✅ WhatsApp enviado para 5527999288981
+2025-05-04 15:24:11,891 [INFO] 172.18.0.6 - - [04/May/2025 15:24:11] "POST /alerta/whatsapp HTTP/1.1" 200 -
+2025-05-04 15:24:36,949 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 15:24:36,950 [INFO] 172.18.0.6 - - [04/May/2025 15:24:36] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 15:24:36,958 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997000258",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"21\", \"OLT-HW-CB-C3-P73307\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:24:38,089 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"a5d3502f-5830-48b9-aa69-8f884ba94c96"}
+2025-05-04 15:24:38,089 [INFO] ✅ WhatsApp enviado para 5527997000258
+2025-05-04 15:24:38,090 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527996462386",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"21\", \"OLT-HW-CB-C3-P73307\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:24:39,199 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"c30c35a4-fff2-458a-8342-941f078cfc98"}
+2025-05-04 15:24:39,200 [INFO] ✅ WhatsApp enviado para 5527996462386
+2025-05-04 15:24:39,200 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527998571827",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"21\", \"OLT-HW-CB-C3-P73307\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:24:40,307 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"494da462-f0dd-4766-a173-0a42f6f3ce80"}
+2025-05-04 15:24:40,307 [INFO] ✅ WhatsApp enviado para 5527998571827
+2025-05-04 15:24:40,308 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "27996067609",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"21\", \"OLT-HW-CB-C3-P73307\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:24:41,413 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"e661aaa2-4c1a-4891-9972-c6b878d968cb"}
+2025-05-04 15:24:41,413 [INFO] ✅ WhatsApp enviado para 27996067609
+2025-05-04 15:24:41,415 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527995048500",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"21\", \"OLT-HW-CB-C3-P73307\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:24:42,529 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"6155355b-9f52-4ffb-bfb5-395d134649a9"}
+2025-05-04 15:24:42,530 [INFO] ✅ WhatsApp enviado para 5527995048500
+2025-05-04 15:24:42,531 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997553252",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"21\", \"OLT-HW-CB-C3-P73307\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:24:43,647 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"421fa0f7-fb68-4df8-986b-27810ef2224f"}
+2025-05-04 15:24:43,648 [INFO] ✅ WhatsApp enviado para 5527997553252
+2025-05-04 15:24:43,648 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527999288981",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"21\", \"OLT-HW-CB-C3-P73307\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:24:44,757 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"dc3313fa-2e9c-4acf-a8be-0a705e4f21df"}
+2025-05-04 15:24:44,758 [INFO] ✅ WhatsApp enviado para 5527999288981
+2025-05-04 15:24:44,759 [INFO] 172.18.0.6 - - [04/May/2025 15:24:44] "POST /alerta/whatsapp HTTP/1.1" 200 -
+2025-05-04 15:25:09,892 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 15:25:09,894 [INFO] 172.18.0.6 - - [04/May/2025 15:25:09] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 15:25:09,902 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997000258",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"12\", \"OLT-HW-CB-C3-P33303\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:25:11,033 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"cef19be2-b414-400b-923a-a792a2b88ab3"}
+2025-05-04 15:25:11,034 [INFO] ✅ WhatsApp enviado para 5527997000258
+2025-05-04 15:25:11,034 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527996462386",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"12\", \"OLT-HW-CB-C3-P33303\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:25:12,147 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"ed5d6ad3-0fff-4702-89a9-824856fbcc69"}
+2025-05-04 15:25:12,148 [INFO] ✅ WhatsApp enviado para 5527996462386
+2025-05-04 15:25:12,148 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527998571827",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"12\", \"OLT-HW-CB-C3-P33303\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:25:13,263 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"f59bda74-9355-4916-851e-9b909d08eeec"}
+2025-05-04 15:25:13,264 [INFO] ✅ WhatsApp enviado para 5527998571827
+2025-05-04 15:25:13,264 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "27996067609",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"12\", \"OLT-HW-CB-C3-P33303\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:25:14,371 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"bad4ad99-0d3b-45a4-8fed-7c92c63adb5b"}
+2025-05-04 15:25:14,372 [INFO] ✅ WhatsApp enviado para 27996067609
+2025-05-04 15:25:14,372 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527995048500",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"12\", \"OLT-HW-CB-C3-P33303\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:25:15,498 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"0beda57a-c66b-49cb-8a18-ee9d6415eef5"}
+2025-05-04 15:25:15,499 [INFO] ✅ WhatsApp enviado para 5527995048500
+2025-05-04 15:25:15,499 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997553252",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"12\", \"OLT-HW-CB-C3-P33303\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:25:16,611 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"9d380514-8c54-4776-8137-a1e86bef31e2"}
+2025-05-04 15:25:16,612 [INFO] ✅ WhatsApp enviado para 5527997553252
+2025-05-04 15:25:16,612 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527999288981",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"12\", \"OLT-HW-CB-C3-P33303\", \"indeterminado\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 15:25:17,720 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"530c9bb0-a6e5-4745-8143-9628f0edad38"}
+2025-05-04 15:25:17,720 [INFO] ✅ WhatsApp enviado para 5527999288981
+2025-05-04 15:25:17,722 [INFO] 172.18.0.6 - - [04/May/2025 15:25:17] "POST /alerta/whatsapp HTTP/1.1" 200 -
+2025-05-04 15:27:51,103 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 15:27:51,104 [INFO] 172.18.0.6 - - [04/May/2025 15:27:51] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 15:27:51,888 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 15:27:51,889 [INFO] 172.18.0.6 - - [04/May/2025 15:27:51] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 15:27:52,668 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 15:27:52,670 [INFO] 172.18.0.6 - - [04/May/2025 15:27:52] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 15:27:53,473 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 15:27:53,474 [INFO] 172.18.0.6 - - [04/May/2025 15:27:53] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 15:27:54,295 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 15:27:54,297 [INFO] 172.18.0.6 - - [04/May/2025 15:27:54] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 15:27:58,217 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 15:27:58,218 [INFO] 172.18.0.6 - - [04/May/2025 15:27:58] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 15:36:01,191 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5002
+ * Running on http://172.18.0.5:5002
+2025-05-04 15:36:01,191 [INFO] [33mPress CTRL+C to quit[0m
+2025-05-04 16:04:33,042 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 16:04:33,044 [INFO] 172.18.0.6 - - [04/May/2025 16:04:33] "POST /alerta/telegram HTTP/1.1" 200 -
+2025-05-04 16:04:33,054 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997000258",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"7\", \"TESTE-MONITORAMENTO0\", \"energia\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 16:04:34,182 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"bbbecf4d-2d21-469a-b5d2-30509ff23a73"}
+2025-05-04 16:04:34,182 [INFO] ✅ WhatsApp enviado para 5527997000258
+2025-05-04 16:04:34,184 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527996462386",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"7\", \"TESTE-MONITORAMENTO0\", \"energia\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 16:04:35,301 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"a7f0e945-30bf-41fb-9062-e8027a8cf597"}
+2025-05-04 16:04:35,301 [INFO] ✅ WhatsApp enviado para 5527996462386
+2025-05-04 16:04:35,302 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527998571827",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"7\", \"TESTE-MONITORAMENTO0\", \"energia\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 16:04:36,411 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"bf879588-d05c-44f7-9ebc-a5272f3d6bbd"}
+2025-05-04 16:04:36,412 [INFO] ✅ WhatsApp enviado para 5527998571827
+2025-05-04 16:04:36,413 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "27996067609",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"7\", \"TESTE-MONITORAMENTO0\", \"energia\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 16:04:37,524 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"ff4b6f14-1384-4a25-9f5a-b1b617a48bce"}
+2025-05-04 16:04:37,525 [INFO] ✅ WhatsApp enviado para 27996067609
+2025-05-04 16:04:37,525 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527995048500",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"7\", \"TESTE-MONITORAMENTO0\", \"energia\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 16:04:38,646 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"1413fd48-3596-4e2a-b048-14c52d69116e"}
+2025-05-04 16:04:38,647 [INFO] ✅ WhatsApp enviado para 5527995048500
+2025-05-04 16:04:38,647 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527997553252",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"7\", \"TESTE-MONITORAMENTO0\", \"energia\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 16:04:39,765 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"c091847d-71cd-48d5-88e6-145e7087cfa0"}
+2025-05-04 16:04:39,765 [INFO] ✅ WhatsApp enviado para 5527997553252
+2025-05-04 16:04:39,766 [INFO] Payload enviado para WhatsApp: {
+    "source": "552730208005",
+    "destination": "5527999288981",
+    "template": "{\"id\": \"463cc50a-008b-46d4-8e99-fd36c9f94f65\", \"params\": [\"7\", \"TESTE-MONITORAMENTO0\", \"energia\"]}",
+    "channel": "whatsapp",
+    "message": ""
+}
+2025-05-04 16:04:40,894 [INFO] Resposta da API WhatsApp: 202 - {"status":"submitted","messageId":"c5c953ac-9fcd-4a2e-bdf4-c37fc72e8e80"}
+2025-05-04 16:04:40,895 [INFO] ✅ WhatsApp enviado para 5527999288981
+2025-05-04 16:04:40,897 [INFO] 172.18.0.6 - - [04/May/2025 16:04:40] "POST /alerta/whatsapp HTTP/1.1" 200 -
+2025-05-04 16:09:46,410 [INFO] Alerta enviado com sucesso no Telegram.
+2025-05-04 16:09:46,413 [INFO] 172.18.0.6 - - [04/May/2025 16:09:46] "POST /alerta/telegram HTTP/1.1" 200 -
