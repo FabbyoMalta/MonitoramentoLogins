@@ -204,7 +204,7 @@ def monitor_connections():
                                 # Vamos enviar detalhes dos *novos* clientes por enquanto, e a contagem total na mensagem
                                 
                                 mensagem_atualizacao_telegram = (
-                                    f"เพิ่มเติม {len(novos_logins_nesta_conexao)} clientes offline detectados na conexão {conexao}. "
+                                    f"🚨 🔄 *Atualização*: Mais {len(novos_logins_nesta_conexao)} clientes offline detectados na conexão {conexao}. "
                                     f"Total offline agora: {len(evento_existente['logins_restantes'])}."
                                 )
                                 # Para send_telegram_alert, 'clientes' deve ser uma lista de dicts

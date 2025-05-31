@@ -43,6 +43,23 @@ headers = {
 
 app = Flask(__name__)
 
+def remuse_os(setor):
+    url = f"https://{host}/webservice/v1/su_oss_chamado"
+    headers['ixcsoft'] = 'listar'
+
+    os_abertas = []
+    os_fechadas = []
+    page = 1
+    rp = 1000  # registros por página    
+
+    setor == 'instalacao':
+        grid_param = json.dumps([
+            {"TB": "su_oss_chamado.assunto"}
+        ])
+
+
+
+
 def fetch_clients(status):
     """
     status: 'online' ou 'offline'
