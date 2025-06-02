@@ -43,7 +43,7 @@ headers = {
 
 app = Flask(__name__)
 
-def remuse_os(setor):
+def resume_os(setor):
     url = f"https://{host}/webservice/v1/su_oss_chamado"
     headers['ixcsoft'] = 'listar'
 
