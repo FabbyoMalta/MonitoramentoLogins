@@ -54,7 +54,7 @@ def remuse_os(setor):
 
     setor == 'instalacao':
         grid_param = json.dumps([
-            {"TB": "su_oss_chamado.assunto"}
+            {"TB": "su_oss_chamado.assunto", "OP": "!=",   }
         ])
 
 
