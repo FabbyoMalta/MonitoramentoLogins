@@ -181,8 +181,42 @@ def monitor_connections():
                 for conexao, clientes in conexoes_novos_offlines.items():
                     if len(clientes) >= THRESHOLD_OFFLINE_CLIENTS:
                         if existe_evento_ativo_para_conexao(conexao):
-                            logging.info(f"Já existe um evento ativo para a conexão {conexao}, pulando criação.")
-                            continue
+                            # Encontrar o evento ativo para a conexão
+                            evento_existente = None
+                            for ev in eventos_ativos:
+                                if ev['conexao'] == conexao:
+                                    evento_existente = ev
+                                    break
+                            
+                            if evento_existente:
+                                novos_logins_nesta_conexao = set(cliente['login'] for cliente in clientes)
+                                logging.info(f"Atualizando evento existente para conexão {conexao} com {len(novos_logins_nesta_conexao)} novos logins.")
+                                
+                                evento_existente['logins_offline'].update(novos_logins_nesta_conexao)
+                                evento_existente['logins_restantes'].update(novos_logins_nesta_conexao)
+                                
+                                save_event(evento_existente, "ativo") # Persistir a atualização no banco de dados
+                                logging.info(f"Evento {evento_existente['id']} atualizado no banco de dados com novos logins.")
+
+                                # Preparar informações para alertas atualizados
+                                # Para o Telegram, idealmente todos os clientes offline do evento
+                                # Recriar a lista de clientes para o alerta do Telegram pode ser complexo aqui
+                                # Vamos enviar detalhes dos *novos* clientes por enquanto, e a contagem total na mensagem
+                                
+                                mensagem_atualizacao_telegram = (
+                                    f"🚨 🔄 *Atualização*: Mais {len(novos_logins_nesta_conexao)} clientes offline detectados na conexão {conexao}. "
+                                    f"Total offline agora: {len(evento_existente['logins_restantes'])}."
+                                )
+                                # Para send_telegram_alert, 'clientes' deve ser uma lista de dicts
+                                # Usaremos os 'clientes' recém detectados para esta conexão específica
+                                send_telegram_alert(clientes, status='offline', conexao=conexao, mensagem_personalizada=mensagem_atualizacao_telegram)
+                                
+                                # Para WhatsApp, apenas a contagem e um motivo genérico
+                                send_whatsapp_alert(len(evento_existente['logins_restantes']), conexao, "Atualização de evento")
+                                continue # Pular para a próxima conexão após atualizar o evento existente
+                            else:
+                                logging.error(f"Evento ativo para conexão {conexao} não encontrado na lista eventos_ativos, embora existe_evento_ativo_para_conexao seja true. Isso não deveria acontecer.")
+                                # Prosseguir para criar um novo evento como fallback, ou adicionar tratamento de erro específico
 
                         olt_logins = [cliente['login'] for cliente in clientes][:3]
                         if len(olt_logins) < 3:
