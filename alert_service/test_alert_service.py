@@ -139,28 +139,36 @@ class TestSendTelegramAlert(unittest.TestCase):
 
     @patch('alert_service.alert_service.MAX_CLIENTS_IN_MESSAGE', 2) # Test with a smaller max
     @patch('alert_service.alert_service.requests.post')
-    def test_offline_clients_exceeding_max_message(self, mock_post):
+    def test_offline_clients_exceeding_max_message_with_mixed_addresses(self, mock_post):
         clients = [
-            {'login': 'user1', 'ultima_conexao_final': '2023-01-01 10:00', 'bairro': 'Centro', 'endereco': 'Rua A'},
-            {'login': 'user2', 'ultima_conexao_final': '2023-01-01 11:00', 'bairro': 'Vila', 'endereco': 'Rua B'},
-            {'login': 'user3', 'ultima_conexao_final': '2023-01-01 12:00', 'bairro': 'Centro', 'endereco': 'Rua C'}
-        ] # 3 clients, MAX is 2
+            {'login': 'user1', 'ultima_conexao_final': '2023-01-01 10:00', 'bairro': 'Centro', 'endereco': 'Rua A'}, # Has address, will be listed
+            {'login': 'user2', 'ultima_conexao_final': '2023-01-01 11:00', 'bairro': None, 'endereco': None},         # No address, will be listed
+            {'login': 'user3', 'ultima_conexao_final': '2023-01-01 12:00', 'bairro': 'Vila', 'endereco': 'Rua B'}     # Has address, NOT listed by login due to MAX_CLIENTS
+        ] # 3 clients, MAX_CLIENTS_IN_MESSAGE is 2
+
         mock_response = Mock()
         mock_response.raise_for_status = Mock()
         mock_post.return_value = mock_response
 
-        send_telegram_alert(clients, 'offline', 'TestConnectionMax')
+        send_telegram_alert(clients, 'offline', 'TestConnectionMaxMixed')
 
         payload = mock_post.call_args[1]['data']
-        self.assertIn("🚨 *Alerta: 3 clientes offline detectados na conexão TestConnectionMax.*", payload['text'])
-        self.assertIn("*Endereços afetados:*", payload['text']) # Addresses should still be there
-        self.assertIn("📍 *Bairro:* Centro", payload['text'])
-        self.assertIn("📍 *Bairro:* Vila", payload['text'])
+        self.assertIn("🚨 *Alerta: 3 clientes offline detectados na conexão TestConnectionMaxMixed.*", payload['text'])
 
+        # Address synthesis should include user1 and user3, but not user2
+        self.assertIn("*Endereços afetados:*", payload['text'])
+        self.assertIn("📍 *Bairro:* Centro", payload['text'])
+        self.assertIn("  - Rua A", payload['text']) # From user1
+        self.assertIn("📍 *Bairro:* Vila", payload['text'])
+        self.assertIn("  - Rua B", payload['text']) # From user3
+
+        # Login list should truncate to user1 and user2
         self.assertIn("Listando alguns clientes:", payload['text'])
         self.assertIn("- *Login:* `user1`", payload['text'])
+        self.assertIn("  *Última conexão:* 2023-01-01 10:00", payload['text'])
         self.assertIn("- *Login:* `user2`", payload['text'])
-        self.assertNotIn("- *Login:* `user3`", payload['text']) # user3 should be omitted from list
+        self.assertIn("  *Última conexão:* 2023-01-01 11:00", payload['text'])
+        self.assertNotIn("- *Login:* `user3`", payload['text'])
         self.assertIn("... e mais 1 clientes.", payload['text'])
 
     @patch('alert_service.alert_service.requests.post')

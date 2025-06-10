@@ -148,22 +148,7 @@ def fetch_clients(status):
                     'latitude': registro.get('latitude'),
                     'longitude': registro.get('longitude')
                 }
-
-                # Buscar endereço do cliente
-                id_cliente = registro.get('id_cliente')
-                if id_cliente:
-                    address_data = fetch_client_address(id_cliente)
-                    if address_data:
-                        client_info['bairro'] = address_data.get('bairro')
-                        client_info['endereco'] = address_data.get('endereco')
-                    else:
-                        client_info['bairro'] = None
-                        client_info['endereco'] = None
-                else:
-                    client_info['bairro'] = None
-                    client_info['endereco'] = None
-                    logging.warning(f"Cliente com registro {registro.get('id')} não possui 'id_cliente'.")
-
+                # Address fetching logic removed as per request.
                 clients.append(client_info)
             
             logging.info(f"Página {page}: Obtidos {len(registros)} registros de clientes {status}.")

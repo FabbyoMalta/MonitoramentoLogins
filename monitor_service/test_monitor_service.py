@@ -403,17 +403,227 @@ class TestMonitorService(unittest.TestCase):
                 }
             )
 
+                }
+            )
+
+    def test_address_fetching_for_new_event_scenarios(self):
+        # This test will cover multiple scenarios for address fetching
+        # Mock constants and URLs (ensure they are patched if not using self.attribute)
+        monitor_service.IXCSOFT_SERVICE_URL = "http://mock-ixcsoft"
+        monitor_service.ALERT_SERVICE_URL = "http://mock-alert"
+        monitor_service.THRESHOLD_OFFLINE_CLIENTS = 3 # For triggering events
+
+        # --- Helper to create client data ---
+        def create_mock_client(login, id_cliente=None, conexao="CONEXAO_ADDR_TEST"):
+            client = {'login': login, 'conexao': conexao, 'id_transmissor': 'OLT_ADDR'}
+            if id_cliente:
+                client['id_cliente'] = id_cliente
+            return client
+
+        # --- Mock data for different scenarios ---
+        clients_scenario1 = [create_mock_client(f"userA{i}", f"idA{i}") for i in range(5)] # 5 clients, < 20
+        clients_scenario2 = [create_mock_client(f"userB{i}", f"idB{i}") for i in range(25)] # 25 clients, > 20
+        clients_scenario3 = [
+            create_mock_client("userC1", "idC1"),
+            create_mock_client("userC2_no_id"), # No id_cliente
+            create_mock_client("userC3", "idC3")
+        ]
+        clients_scenario4 = [
+            create_mock_client("userD1", "idD1_ok"),
+            create_mock_client("userD2", "idD2_error"), # Address fetch will fail
+            create_mock_client("userD3", "idD3_json_error") # Address fetch will have JSON error
+        ]
+
+        # --- Side effect function for requests.get ---
+        address_get_call_log = []
+        # Store the original side_effect from setUp if it exists, or None
+        original_get_side_effect = self.mock_requests_get.side_effect
+
+        def mock_requests_get_side_effect_for_addr_test(url, timeout=None):
+            address_get_call_log.append(url) # Log the call
+            mock_resp = MagicMock()
+            mock_resp.raise_for_status = MagicMock()
+
+            # Determine which set of clients to serve for /clientes/offline
+            # This is a bit of a simplification; real cycle testing might vary self.current_offline_clients
+            if hasattr(self, '_current_offline_clients_for_test'):
+                current_offline_list = self._current_offline_clients_for_test
+            else: # Default if not set by a specific scenario step
+                current_offline_list = []
+
+
+            if f"{monitor_service.IXCSOFT_SERVICE_URL}/clientes/offline" in url:
+                mock_resp.json.return_value = {'clientes': current_offline_list}
+            elif f"{monitor_service.IXCSOFT_SERVICE_URL}/clientes/online" in url:
+                mock_resp.json.return_value = {'clientes': []} # Assume no one comes online during these specific tests
+            elif f"{monitor_service.IXCSOFT_SERVICE_URL}/cliente/idD2_error" in url: # Scenario 4: Error
+                mock_resp.raise_for_status.side_effect = requests.exceptions.RequestException("Simulated API error")
+            elif f"{monitor_service.IXCSOFT_SERVICE_URL}/cliente/idD3_json_error" in url: # Scenario 4: JSON error
+                mock_resp.json.side_effect = json.JSONDecodeError("Simulated JSON error", "doc", 0)
+                # also need to simulate a non-ok status or ensure raise_for_status isn't called,
+                # or that the error is caught before .json() if raise_for_status passes
+                # For simplicity, assume json() is called and throws.
+            elif f"{monitor_service.IXCSOFT_SERVICE_URL}/cliente/" in url: # Generic address fetch
+                client_id_from_url = url.split('/')[-1]
+                mock_resp.json.return_value = {'bairro': f'Bairro_{client_id_from_url}', 'endereco': f'Rua_{client_id_from_url}'}
+            else: # Default for any other GET using the original side_effect if available
+                if callable(original_get_side_effect) and not isinstance(original_get_side_effect, MagicMock):
+                    return original_get_side_effect(url, timeout=timeout)
+                elif isinstance(original_get_side_effect, MagicMock): # if it's the default mock
+                    mock_resp.json.return_value = {} # Default empty
+                else: # if it was a list or other iterable
+                    # This part might need more sophisticated handling if original_get_side_effect was a list
+                    mock_resp.json.return_value = {}
+            return mock_resp
+
+        self.mock_requests_get.side_effect = mock_requests_get_side_effect_for_addr_test
+        # Default mock_olt_reason for simplicity in this test
+        self.mock_requests_post.return_value.json.return_value = {"motivo_final": "mock_olt_reason_addr_test"}
+
+
+        # === Run Scenario 1: Fewer than 20 offline clients ===
+        monitor_service.eventos_ativos = []
+        monitor_service.clientes_offline_anterior = set()
+        monitor_service.clientes_info_offline_anterior = {}
+        address_get_call_log.clear()
+        self.mock_cursor.fetchall.return_value = [] # No existing events from DB
+        self.mock_cursor.fetchone.return_value = (0,) # existe_evento_ativo_para_conexao returns False
+
+        self._current_offline_clients_for_test = [] # Cycle 1: No one offline
+        self._run_monitor_cycle(num_cycles=1)
+
+        self._current_offline_clients_for_test = clients_scenario1 # Cycle 2: S1 clients go offline
+        self._run_monitor_cycle(num_cycles=1)
+
+        self.assertEqual(sum(1 for call_url in address_get_call_log if f"{monitor_service.IXCSOFT_SERVICE_URL}/cliente/" in call_url), 5)
+        for client in clients_scenario1:
+            self.assertIn(f"{monitor_service.IXCSOFT_SERVICE_URL}/cliente/{client['id_cliente']}", address_get_call_log)
+
+        s1_alert_payload = None
+        for call_arg in self.mock_requests_post.call_args_list:
+            if call_arg[0][0] == f"{monitor_service.ALERT_SERVICE_URL}/alerta/telegram":
+                 payload_json = call_arg[1].get('json', {})
+                 if payload_json.get('conexao') == "CONEXAO_ADDR_TEST" and len(payload_json.get('clientes',[])) == 5 :
+                    s1_alert_payload = payload_json
+                    break
+        self.assertIsNotNone(s1_alert_payload, "Telegram alert for Scenario 1 not found.")
+        for client_in_payload in s1_alert_payload['clientes']:
+            self.assertIn('bairro', client_in_payload)
+            self.assertIn('endereco', client_in_payload)
+            self.assertEqual(client_in_payload['bairro'], f"Bairro_{client_in_payload['id_cliente']}")
+
+
+        # === Run Scenario 2: More than 20 offline clients ===
+        monitor_service.eventos_ativos = []
+        monitor_service.clientes_offline_anterior = set()
+        monitor_service.clientes_info_offline_anterior = {}
+        address_get_call_log.clear()
+        self.mock_requests_post.reset_mock()
+        self.mock_cursor.fetchall.return_value = []
+        self.mock_cursor.fetchone.return_value = (0,)
+
+        self._current_offline_clients_for_test = []
+        self._run_monitor_cycle(num_cycles=1)
+
+        self._current_offline_clients_for_test = clients_scenario2
+        self._run_monitor_cycle(num_cycles=1)
+
+        self.assertEqual(sum(1 for call_url in address_get_call_log if f"{monitor_service.IXCSOFT_SERVICE_URL}/cliente/" in call_url), 20)
+        s2_alert_payload = None
+        for call_arg in self.mock_requests_post.call_args_list:
+            if call_arg[0][0] == f"{monitor_service.ALERT_SERVICE_URL}/alerta/telegram":
+                 payload_json = call_arg[1].get('json', {})
+                 if payload_json.get('conexao') == "CONEXAO_ADDR_TEST" and len(payload_json.get('clientes',[])) == 25 :
+                    s2_alert_payload = payload_json
+                    break
+        self.assertIsNotNone(s2_alert_payload, "Telegram alert for Scenario 2 not found.")
+        for i, client_in_payload in enumerate(s2_alert_payload['clientes']):
+            expected_id = client_in_payload.get('id_cliente')
+            if i < 20:
+                self.assertIn('bairro', client_in_payload)
+                self.assertEqual(client_in_payload['bairro'], f"Bairro_{expected_id}")
+            else:
+                self.assertIsNone(client_in_payload.get('bairro'))
+                self.assertIsNone(client_in_payload.get('endereco'))
+
+
+        # === Run Scenario 3: Client missing id_cliente ===
+        monitor_service.eventos_ativos = []
+        monitor_service.clientes_offline_anterior = set()
+        monitor_service.clientes_info_offline_anterior = {}
+        address_get_call_log.clear()
+        self.mock_requests_post.reset_mock()
+        self.mock_cursor.fetchall.return_value = []
+        self.mock_cursor.fetchone.return_value = (0,)
+
+        self._current_offline_clients_for_test = []
+        self._run_monitor_cycle(num_cycles=1)
+
+        self._current_offline_clients_for_test = clients_scenario3
+        self._run_monitor_cycle(num_cycles=1)
+
+        self.assertEqual(sum(1 for call_url in address_get_call_log if f"{monitor_service.IXCSOFT_SERVICE_URL}/cliente/" in call_url), 2)
+        self.assertIn(f"{monitor_service.IXCSOFT_SERVICE_URL}/cliente/idC1", address_get_call_log)
+        self.assertIn(f"{monitor_service.IXCSOFT_SERVICE_URL}/cliente/idC3", address_get_call_log)
+
+        s3_alert_payload = None
+        for call_arg in self.mock_requests_post.call_args_list:
+            if call_arg[0][0] == f"{monitor_service.ALERT_SERVICE_URL}/alerta/telegram":
+                 payload_json = call_arg[1].get('json', {})
+                 if payload_json.get('conexao') == "CONEXAO_ADDR_TEST" and len(payload_json.get('clientes',[])) == 3 :
+                    s3_alert_payload = payload_json
+                    break
+        self.assertIsNotNone(s3_alert_payload, "Telegram alert for Scenario 3 not found.")
+        for client_in_payload in s3_alert_payload['clientes']:
+            if client_in_payload['login'] == "userC2_no_id":
+                self.assertIsNone(client_in_payload.get('bairro'))
+                self.assertIsNone(client_in_payload.get('endereco'))
+            elif client_in_payload.get('id_cliente'): # Should be idC1 or idC3
+                self.assertIsNotNone(client_in_payload.get('bairro'))
+
+
+        # === Run Scenario 4: Error fetching address ===
+        monitor_service.eventos_ativos = []
+        monitor_service.clientes_offline_anterior = set()
+        monitor_service.clientes_info_offline_anterior = {}
+        address_get_call_log.clear()
+        self.mock_requests_post.reset_mock()
+        self.mock_cursor.fetchall.return_value = []
+        self.mock_cursor.fetchone.return_value = (0,)
+
+        self._current_offline_clients_for_test = []
+        self._run_monitor_cycle(num_cycles=1)
+
+        self._current_offline_clients_for_test = clients_scenario4
+        self._run_monitor_cycle(num_cycles=1)
+
+        self.assertEqual(sum(1 for call_url in address_get_call_log if f"{monitor_service.IXCSOFT_SERVICE_URL}/cliente/" in call_url), 3)
+
+        s4_alert_payload = None
+        for call_arg in self.mock_requests_post.call_args_list:
+            if call_arg[0][0] == f"{monitor_service.ALERT_SERVICE_URL}/alerta/telegram":
+                 payload_json = call_arg[1].get('json', {})
+                 if payload_json.get('conexao') == "CONEXAO_ADDR_TEST" and len(payload_json.get('clientes',[])) == 3 :
+                     if any(c['login'] == 'userD1_ok' for c in payload_json.get('clientes', [])):
+                        s4_alert_payload = payload_json
+                        break
+        self.assertIsNotNone(s4_alert_payload, "Telegram alert for Scenario 4 not found.")
+        for client_in_payload in s4_alert_payload['clientes']:
+            client_id = client_in_payload.get('id_cliente')
+            if client_in_payload['login'] == "userD1_ok":
+                self.assertEqual(client_in_payload['bairro'], f"Bairro_{client_id}")
+            elif client_in_payload['login'] == "userD2_error":
+                self.assertIsNone(client_in_payload.get('bairro'))
+                self.assertIsNone(client_in_payload.get('endereco'))
+            elif client_in_payload['login'] == "userD3_json_error":
+                self.assertIsNone(client_in_payload.get('bairro'))
+                self.assertIsNone(client_in_payload.get('endereco'))
+
+        # Restore original side_effect for mock_requests_get if it was changed
+        self.mock_requests_get.side_effect = original_get_side_effect
+
+
 if __name__ == '__main__':
-    # Important: Ensure the CWD is the root of the project for imports to work correctly if run directly
-    # For example, if test_monitor_service.py is in monitor_service/tests/
-    # and monitor_service.py is in monitor_service/
-    # you might need to run from the directory containing the monitor_service package.
-    # The sys.path modification at the top helps, but running with `python -m unittest discover`
-    # from the project root is generally more robust.
-    
-    # If you place this test file inside the 'monitor_service' directory alongside 'monitor_service.py':
-    # And run from the parent directory of 'monitor_service':
-    # python -m unittest monitor_service.test_monitor_service
     unittest.main()
 
 ```

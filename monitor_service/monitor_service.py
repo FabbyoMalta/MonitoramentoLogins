@@ -254,6 +254,50 @@ def monitor_connections():
                             f"🚨 *Alerta: {len(clientes)} clientes offline detectados na conexão {conexao}.*\n"
                             f"Motivo da queda: {motivo.capitalize()}"
                         )
+
+                        # --- BEGIN Address Fetching Logic for New Event ---
+                        logging.info(f"Fetching addresses for up to 20 clients for new event in conexao {conexao}")
+                        clients_for_address_lookup = clientes[:20] # Get the first 20 clients
+
+                        # This loop modifies the dictionaries within the 'clientes' list directly.
+                        for client_to_lookup in clients_for_address_lookup:
+                            client_id = client_to_lookup.get('id_cliente')
+                            login_for_log = client_to_lookup.get('login', 'N/A') # For logging
+
+                            if client_id:
+                                address_url = f"{IXCSOFT_SERVICE_URL}/cliente/{client_id}"
+                                try:
+                                    # Assuming ixcsoft_service endpoint /cliente/{id} does not require special headers beyond what requests might send by default
+                                    # or that ixcsoft_service is not behind a gateway that needs specific auth for this internal call.
+                                    # If ixcsoft_service expects the same auth as its own external calls, headers would be needed.
+                                    # For now, let's assume no special headers are needed for this internal service-to-service call.
+                                    response = requests.get(address_url, timeout=5) # Added timeout
+                                    response.raise_for_status()
+                                    address_data = response.json()
+
+                                    client_to_lookup['bairro'] = address_data.get('bairro')
+                                    client_to_lookup['endereco'] = address_data.get('endereco')
+                                    logging.info(f"Successfully fetched address for client ID {client_id} (Login: {login_for_log}): Bairro - {client_to_lookup['bairro']}, Endereco - {client_to_lookup['endereco']}")
+
+                                except requests.exceptions.RequestException as e:
+                                    logging.error(f"Error fetching address for client ID {client_id} (Login: {login_for_log}): {e}")
+                                    client_to_lookup['bairro'] = None
+                                    client_to_lookup['endereco'] = None
+                                except json.JSONDecodeError as e:
+                                    logging.error(f"Error decoding JSON for client ID {client_id} (Login: {login_for_log}): {e}. Response text: {response.text if 'response' in locals() else 'N/A'}")
+                                    client_to_lookup['bairro'] = None
+                                    client_to_lookup['endereco'] = None
+                                except Exception as e: # Catch any other unexpected error
+                                    logging.error(f"Unexpected error fetching address for client ID {client_id} (Login: {login_for_log}): {e}")
+                                    client_to_lookup['bairro'] = None
+                                    client_to_lookup['endereco'] = None
+                            else:
+                                logging.warning(f"Client login {login_for_log} is missing 'id_cliente'. Cannot fetch address.")
+                                client_to_lookup['bairro'] = None
+                                client_to_lookup['endereco'] = None
+                        # --- END Address Fetching Logic ---
+
+                        # 'clientes' list now contains updated address info for the first 20 clients
                         send_telegram_alert(clientes, status='offline', conexao=conexao, mensagem_personalizada=mensagem_alerta)
                         send_whatsapp_alert(len(clientes), conexao, motivo)
                     else:
