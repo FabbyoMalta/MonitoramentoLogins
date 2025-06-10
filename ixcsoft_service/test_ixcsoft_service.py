@@ -29,9 +29,10 @@ class TestFetchClientAddress(unittest.TestCase):
         mocked_global_headers = {'Authorization': 'Basic mock_token_base64', 'Content-Type': 'application/json'}
         with patch('ixcsoft_service.ixcsoft_service.host', 'mock_host'), \
              patch('ixcsoft_service.ixcsoft_service.headers', mocked_global_headers):
-            address = fetch_client_address(client_id)
+            result_data, status_code = fetch_client_address(client_id)
 
-        self.assertEqual(address, expected_address)
+        self.assertEqual(status_code, 200)
+        self.assertEqual(result_data, expected_address)
         mock_get.assert_called_once_with(
             f"https://mock_host/webservice/v1/cliente/{client_id}",
             headers=mocked_global_headers,
@@ -43,14 +44,37 @@ class TestFetchClientAddress(unittest.TestCase):
         # Configure the mock for an API error response
         mock_response = Mock()
         mock_response.json.return_value = {'type': 'error', 'message': 'Client not found'}
+        # For HTTPError simulation, if raise_for_status is based on this, it might need specific setup
+        # However, fetch_client_address checks for 'type':'error' even in 200 responses from IXC.
         mock_response.raise_for_status = Mock()
         mock_get.return_value = mock_response
 
         client_id = '2'
+        expected_error_data = {'error': 'Client not found'}
         with patch('ixcsoft_service.ixcsoft_service.host', 'mock_host'):
-            address = fetch_client_address(client_id)
+            result_data, status_code = fetch_client_address(client_id)
 
-        self.assertIsNone(address)
+        self.assertEqual(status_code, 404)
+        self.assertEqual(result_data, expected_error_data)
+
+    @patch('ixcsoft_service.ixcsoft_service.requests.get')
+    def test_fetch_client_address_http_error_from_ixc(self, mock_get):
+        # Test for when IXC API itself returns a 4xx/5xx error
+        mock_response = Mock()
+        mock_response.status_code = 403 # Example: Forbidden from IXC
+        mock_response.json.return_value = {'message': 'Access denied by IXC'}
+        mock_response.text = 'Access denied by IXC'
+        mock_get.return_value = mock_response
+        mock_get.side_effect = requests.exceptions.HTTPError(response=mock_response)
+
+        client_id = '2b'
+        expected_error_data = {'error': 'IXC API HTTP error: 403', 'details': 'Access denied by IXC'}
+        with patch('ixcsoft_service.ixcsoft_service.host', 'mock_host'):
+            result_data, status_code = fetch_client_address(client_id)
+
+        self.assertEqual(status_code, 403)
+        self.assertEqual(result_data, expected_error_data)
+
 
     @patch('ixcsoft_service.ixcsoft_service.requests.get')
     def test_fetch_client_address_request_exception(self, mock_get):
@@ -58,10 +82,12 @@ class TestFetchClientAddress(unittest.TestCase):
         mock_get.side_effect = requests.exceptions.RequestException("Network error")
 
         client_id = '3'
+        expected_error_data = {'error': 'Failed to connect to IXC API: Network error'}
         with patch('ixcsoft_service.ixcsoft_service.host', 'mock_host'):
-            address = fetch_client_address(client_id)
+            result_data, status_code = fetch_client_address(client_id)
 
-        self.assertIsNone(address)
+        self.assertEqual(status_code, 503)
+        self.assertEqual(result_data, expected_error_data)
 
     @patch('ixcsoft_service.ixcsoft_service.requests.get')
     def test_fetch_client_address_missing_fields(self, mock_get):
@@ -74,21 +100,27 @@ class TestFetchClientAddress(unittest.TestCase):
         client_id = '4'
         expected_address = {'bairro': 'Vila Nova', 'endereco': None}
         with patch('ixcsoft_service.ixcsoft_service.host', 'mock_host'):
-            address = fetch_client_address(client_id)
+            result_data, status_code = fetch_client_address(client_id)
 
-        self.assertEqual(address, expected_address)
+        self.assertEqual(status_code, 200)
+        self.assertEqual(result_data, expected_address)
 
     @patch('ixcsoft_service.ixcsoft_service.requests.get')
     def test_fetch_client_address_json_decode_error(self, mock_get):
         mock_response = Mock()
         mock_response.json.side_effect = requests.exceptions.JSONDecodeError("Error decoding JSON", "doc", 0)
+        # Important: raise_for_status should not be called before .json() if .json() is the one failing
+        # or if it is, ensure it doesn't throw an exception that masks JSONDecodeError
         mock_response.raise_for_status = Mock()
         mock_get.return_value = mock_response
 
         client_id = '5'
+        expected_error_data = {'error': 'Invalid JSON response from IXC API'}
         with patch('ixcsoft_service.ixcsoft_service.host', 'mock_host'):
-            address = fetch_client_address(client_id)
-        self.assertIsNone(address)
+            result_data, status_code = fetch_client_address(client_id)
+
+        self.assertEqual(status_code, 502)
+        self.assertEqual(result_data, expected_error_data)
 
 
 class TestFetchClients(unittest.TestCase):
@@ -175,3 +207,109 @@ class TestFetchClients(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+# Test class for the new Flask route
+from ixcsoft_service.ixcsoft_service import app # Import the Flask app instance
+import json # For json.loads
+
+class TestClientAddressRoute(unittest.TestCase):
+    def setUp(self):
+        app.testing = True
+        self.client = app.test_client()
+        # It's often good practice to patch at the class level if multiple tests use the same mock
+        self.requests_get_patcher = patch('ixcsoft_service.ixcsoft_service.requests.get')
+        self.mock_requests_get = self.requests_get_patcher.start()
+
+        # Mock host and headers for all route tests, as fetch_client_address uses them
+        self.host_patcher = patch('ixcsoft_service.ixcsoft_service.host', 'mock_external_ixc_host')
+        self.mock_host = self.host_patcher.start()
+
+        self.headers_patcher = patch('ixcsoft_service.ixcsoft_service.headers', {'Authorization': 'Basic TestToken', 'Content-Type': 'application/json'})
+        self.mock_headers = self.headers_patcher.start()
+
+
+    def tearDown(self):
+        self.requests_get_patcher.stop()
+        self.host_patcher.stop()
+        self.headers_patcher.stop()
+
+    def test_route_success(self):
+        mock_response = Mock()
+        mock_response.json.return_value = {'bairro': 'Test Bairro', 'endereco': 'Test Endereco'}
+        mock_response.raise_for_status = Mock()
+        self.mock_requests_get.return_value = mock_response
+
+        response = self.client.get('/cliente/123')
+        data = json.loads(response.data.decode('utf-8'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data, {'bairro': 'Test Bairro', 'endereco': 'Test Endereco'})
+        self.mock_requests_get.assert_called_once_with(
+            f"https://mock_external_ixc_host/webservice/v1/cliente/123",
+            headers={'Authorization': 'Basic TestToken', 'Content-Type': 'application/json'},
+            verify=False,
+            timeout=10
+        )
+
+    def test_route_client_not_found_external_api_error(self):
+        # Simulate external IXC API returning its own "not found" error, e.g., in a 200 response's JSON
+        mock_response = Mock()
+        mock_response.json.return_value = {'type': 'error', 'message': 'Cliente nao encontrado no IXC'}
+        mock_response.raise_for_status = Mock() # No HTTPError raised by requests.get
+        self.mock_requests_get.return_value = mock_response
+
+        response = self.client.get('/cliente/404_id')
+        data = json.loads(response.data.decode('utf-8'))
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(data, {'error': 'Cliente nao encontrado no IXC'})
+
+    def test_route_client_not_found_external_api_http_404(self):
+        # Simulate external IXC API returning an actual HTTP 404
+        mock_ext_response = Mock(status_code=404)
+        mock_ext_response.json.return_value = {'message': 'IXC Nao Encontrado'} # Example IXC 404 body
+        mock_ext_response.text = 'IXC Nao Encontrado'
+        self.mock_requests_get.side_effect = requests.exceptions.HTTPError(response=mock_ext_response)
+
+        response = self.client.get('/cliente/404_real_id')
+        data = json.loads(response.data.decode('utf-8'))
+
+        self.assertEqual(response.status_code, 404)
+        self.assertIn('IXC API HTTP error: 404', data['error'])
+        self.assertEqual(data['details'], 'IXC Nao Encontrado')
+
+
+    def test_route_external_api_server_error(self):
+        mock_ext_response = Mock(status_code=500)
+        mock_ext_response.json.return_value = {'message': 'Erro interno no IXC'}
+        mock_ext_response.text = 'Erro interno no IXC'
+        self.mock_requests_get.side_effect = requests.exceptions.HTTPError(response=mock_ext_response)
+
+        response = self.client.get('/cliente/500_id')
+        data = json.loads(response.data.decode('utf-8'))
+
+        self.assertEqual(response.status_code, 500)
+        self.assertIn('IXC API HTTP error: 500', data['error'])
+
+    def test_route_network_error_to_external_api(self):
+        self.mock_requests_get.side_effect = requests.exceptions.RequestException("Cannot connect to IXC")
+
+        response = self.client.get('/cliente/net_error_id')
+        data = json.loads(response.data.decode('utf-8'))
+
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual(data, {'error': 'Failed to connect to IXC API: Cannot connect to IXC'})
+
+    def test_route_invalid_json_from_external_api(self):
+        mock_response = Mock()
+        mock_response.raise_for_status = Mock()
+        mock_response.json.side_effect = json.JSONDecodeError("IXC returned malformed JSON", "doc", 0)
+        self.mock_requests_get.return_value = mock_response
+
+        response = self.client.get('/cliente/bad_json_id')
+        data = json.loads(response.data.decode('utf-8'))
+
+        self.assertEqual(response.status_code, 502)
+        self.assertEqual(data, {'error': 'Invalid JSON response from IXC API'})
+```

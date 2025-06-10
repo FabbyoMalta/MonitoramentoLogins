@@ -50,31 +50,58 @@ def fetch_client_address(client_id):
     # headers_get.pop('ixcsoft', None) # GET request might not need 'ixcsoft' header or it might be different
 
     try:
-        response = requests.get(url, headers=headers, verify=False) # Assuming GET for individual client
-        response.raise_for_status()
+        # This GET request is to the external IXC API
+        response = requests.get(url, headers=headers, verify=False, timeout=10)
+        response.raise_for_status() # Raises HTTPError for bad responses (4xx or 5xx)
         data = response.json()
 
+        # Check for application-level errors returned by IXC API in a 200 response
         if 'type' in data and data['type'] == 'error':
-            logging.error(f"Erro ao obter endereço para o cliente {client_id}: {data.get('message', '')}")
-            return None
+            error_message = data.get('message', 'Client not found or error processing request by IXC.')
+            logging.error(f"API error from IXC for client {client_id}: {error_message}")
+            # Consider 404 if message suggests client not found, otherwise 502 if IXC had an issue.
+            # For simplicity, let's use 404 for now for any such application error.
+            return {'error': error_message}, 404
 
-        # Extrair bairro e endereço da resposta
-        # Ajuste os campos conforme a estrutura real da resposta da API para /cliente/{id}
+        # Successfully fetched and no application-level error
         address_info = {
             'bairro': data.get('bairro'),
             'endereco': data.get('endereco')
+            # Ensure other relevant fields from the /cliente/{id} IXC API response are included if needed
         }
-        logging.info(f"Endereço obtido para cliente {client_id}: Bairro - {address_info['bairro']}, Endereço - {address_info['endereco']}")
-        return address_info
+        logging.info(f"Endereço obtido para cliente {client_id}: Bairro - {address_info.get('bairro')}, Endereço - {address_info.get('endereco')}")
+        return address_info, 200
+
+    except requests.exceptions.HTTPError as e:
+        # Specific error from HTTP status code (4xx, 5xx from external IXC API)
+        logging.error(f"HTTP error fetching address for client {client_id} from IXC API: {e}")
+        # Pass through a semblance of the error if possible, or a generic one
+        # response might not be available or be None, or not have json
+        try:
+            error_json = e.response.json() if e.response is not None else {}
+        except json.JSONDecodeError:
+            error_json = {}
+        return {'error': f"IXC API HTTP error: {e.response.status_code if e.response is not None else 'Unknown'}", 'details': error_json.get('message', e.response.text if e.response is not None else 'No details')}, e.response.status_code if e.response is not None else 500
 
     except requests.exceptions.RequestException as e:
-        logging.error(f"Erro na requisição de endereço para o cliente {client_id}: {e}")
-        return None
-    except json.JSONDecodeError:
-        logging.error(f"Erro ao decodificar JSON da resposta de endereço para o cliente {client_id}.")
-        return None
+        # Connectivity issues, timeout, etc. when trying to reach IXC API
+        logging.error(f"RequestException fetching address for client {client_id} from IXC API: {e}")
+        return {'error': f"Failed to connect to IXC API: {str(e)}"}, 503 # Service Unavailable
+    except json.JSONDecodeError as e:
+        # Response from IXC API was not valid JSON
+        logging.error(f"JSONDecodeError fetching address for client {client_id} from IXC API: {e}")
+        return {'error': "Invalid JSON response from IXC API"}, 502 # Bad Gateway (IXC gave bad response)
 
 app = Flask(__name__)
+
+@app.route('/cliente/<int:client_id>', methods=['GET'])
+def get_client_address_route(client_id):
+    """
+    Flask route to get client address information by client_id.
+    This calls the internal fetch_client_address function which in turn calls the external IXC API.
+    """
+    address_data, status_code = fetch_client_address(client_id)
+    return jsonify(address_data), status_code
 
 def resume_os(setor):
     url = f"https://{host}/webservice/v1/su_oss_chamado"
