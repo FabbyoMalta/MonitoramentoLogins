@@ -119,11 +119,13 @@ def send_telegram_alert(clientes, status, conexao, mensagem_personalizada=None):
             'conexao': conexao,
             'mensagem_personalizada': mensagem_personalizada
         }
+        logging.info(f"Enviando alerta para {url} com payload: {json.dumps(payload)}")
         response = requests.post(url, json=payload)
         response.raise_for_status()
-        logging.info(f"Alerta Telegram enviado para conexão {conexao}.")
+        logging.info(f"Alerta enviado com sucesso para {conexao}. Status: {response.status_code}")
     except Exception as e:
-        logging.error(f"Erro ao enviar alerta Telegram: {e}")
+        logging.critical(f"FALHA CRÍTICA ao enviar alerta para {ALERT_SERVICE_URL}/alerta/telegram. Erro: {e}. Payload: {json.dumps(payload)}")
+        # TODO: Implementar mecanismo de retentativa ou notificação alternativa em caso de falha no envio do alerta.
 
 def send_whatsapp_alert(total_clientes, conexao, motivo):
     try:
