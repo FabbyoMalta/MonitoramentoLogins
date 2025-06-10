@@ -78,9 +78,10 @@ def send_telegram_alert(clientes, status, conexao, mensagem_personalizada=None):
         'parse_mode': 'Markdown'
     }
     try:
+        logging.info(f"Enviando mensagem para API do Telegram: URL={url}, Payload={json.dumps(payload)}")
         response = requests.post(url, data=payload)
         response.raise_for_status()
-        logging.info("Alerta enviado com sucesso no Telegram.")
+        logging.info(f"Alerta enviado com sucesso no Telegram. Status API: {response.status_code}")
         return {'message': 'Alerta enviado com sucesso no Telegram'}
     except requests.exceptions.RequestException as e:
         logging.error(f"Falha ao enviar mensagem no Telegram: {e}")
@@ -131,6 +132,7 @@ def send_whatsapp_alert(total_clientes, conexao, motivo):
 @app.route('/alerta/telegram', methods=['POST'])
 def alerta_telegram():
     data = request.get_json()
+    logging.info(f"Rota /alerta/telegram acessada. Payload recebido: {json.dumps(data)}")
     clientes = data.get('clientes', [])
     status = data.get('status')
     conexao = data.get('conexao')
