@@ -52,13 +52,16 @@ def resume_os(setor):
     page = 1
     rp = 1000  # registros por página    
 
-    setor == 'instalacao':
+    if setor == 'instalacao':
         grid_param = json.dumps([
             {"TB": "su_oss_chamado.assunto", "OP": "!=",   }
         ])
-
-
-
+    if setor == 'manutencao':
+        grid_param = json.dumps([
+            {"TB": "su_oss_chamado.assunto", "OP": "!=",   }
+        ])
+    else:
+        return []
 
 def fetch_clients(status):
     """
