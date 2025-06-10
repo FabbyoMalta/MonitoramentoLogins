@@ -41,6 +41,39 @@ headers = {
     'Content-Type': 'application/json'
 }
 
+def fetch_client_address(client_id):
+    """
+    Busca o endereço (bairro e rua) de um cliente específico na API IXCSoft.
+    """
+    url = f"https://{host}/webservice/v1/cliente/{client_id}"
+    # headers_get = headers.copy()  # Copia para não modificar o global
+    # headers_get.pop('ixcsoft', None) # GET request might not need 'ixcsoft' header or it might be different
+
+    try:
+        response = requests.get(url, headers=headers, verify=False) # Assuming GET for individual client
+        response.raise_for_status()
+        data = response.json()
+
+        if 'type' in data and data['type'] == 'error':
+            logging.error(f"Erro ao obter endereço para o cliente {client_id}: {data.get('message', '')}")
+            return None
+
+        # Extrair bairro e endereço da resposta
+        # Ajuste os campos conforme a estrutura real da resposta da API para /cliente/{id}
+        address_info = {
+            'bairro': data.get('bairro'),
+            'endereco': data.get('endereco')
+        }
+        logging.info(f"Endereço obtido para cliente {client_id}: Bairro - {address_info['bairro']}, Endereço - {address_info['endereco']}")
+        return address_info
+
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Erro na requisição de endereço para o cliente {client_id}: {e}")
+        return None
+    except json.JSONDecodeError:
+        logging.error(f"Erro ao decodificar JSON da resposta de endereço para o cliente {client_id}.")
+        return None
+
 app = Flask(__name__)
 
 def resume_os(setor):
@@ -115,6 +148,22 @@ def fetch_clients(status):
                     'latitude': registro.get('latitude'),
                     'longitude': registro.get('longitude')
                 }
+
+                # Buscar endereço do cliente
+                id_cliente = registro.get('id_cliente')
+                if id_cliente:
+                    address_data = fetch_client_address(id_cliente)
+                    if address_data:
+                        client_info['bairro'] = address_data.get('bairro')
+                        client_info['endereco'] = address_data.get('endereco')
+                    else:
+                        client_info['bairro'] = None
+                        client_info['endereco'] = None
+                else:
+                    client_info['bairro'] = None
+                    client_info['endereco'] = None
+                    logging.warning(f"Cliente com registro {registro.get('id')} não possui 'id_cliente'.")
+
                 clients.append(client_info)
             
             logging.info(f"Página {page}: Obtidos {len(registros)} registros de clientes {status}.")

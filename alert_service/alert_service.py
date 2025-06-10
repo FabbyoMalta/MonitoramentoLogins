@@ -46,7 +46,32 @@ def send_telegram_alert(clientes, status, conexao, mensagem_personalizada=None):
     total_clientes = len(clientes)
     if total_clientes == 0:
         return {'message': 'Nenhum cliente para alertar'}
-    
+
+    # Endereços afetados
+    enderecos_afetados_str = ""
+    if status == 'offline' and total_clientes > 0: # Only add address if clients are offline and list is not empty
+        enderecos_por_bairro = {}
+        for cliente in clientes:
+            bairro = cliente.get('bairro')
+            endereco = cliente.get('endereco')
+            if bairro and endereco: # Only include if both bairro and endereco are present
+                if bairro not in enderecos_por_bairro:
+                    enderecos_por_bairro[bairro] = set()
+                enderecos_por_bairro[bairro].add(endereco)
+            elif bairro: # Client has neighborhood but no street
+                if bairro not in enderecos_por_bairro:
+                    enderecos_por_bairro[bairro] = set()
+                enderecos_por_bairro[bairro].add("Rua não especificada")
+
+
+        if enderecos_por_bairro:
+            enderecos_afetados_str = "\n*Endereços afetados:*\n"
+            for bairro, ruas in enderecos_por_bairro.items():
+                enderecos_afetados_str += f"📍 *Bairro:* {bairro}\n"
+                for rua in sorted(list(ruas)): # Sort streets for consistent output
+                    enderecos_afetados_str += f"  - {rua}\n"
+            enderecos_afetados_str += "\n"
+
     if mensagem_personalizada:
         mensagem = mensagem_personalizada + "\n"
     elif status == 'offline':
@@ -56,20 +81,31 @@ def send_telegram_alert(clientes, status, conexao, mensagem_personalizada=None):
     else:
         mensagem = f"*Alerta: {total_clientes} clientes com status desconhecido na conexão {conexao}.*\n"
     
+    mensagem += enderecos_afetados_str # Add synthesized addresses here
+
     if total_clientes <= MAX_CLIENTS_IN_MESSAGE:
-        for cliente in clientes:
-            login = cliente.get('login', 'N/A')
-            ultima_conexao_final = cliente.get('ultima_conexao_final', 'N/A')
-            mensagem += f"- *Login:* `{login}`\n"
-            mensagem += f"  *Última conexão:* {ultima_conexao_final}\n"
+        if status == 'offline': # Only list clients if they are offline
+            for cliente in clientes:
+                login = cliente.get('login', 'N/A')
+                ultima_conexao_final = cliente.get('ultima_conexao_final', 'N/A')
+                mensagem += f"- *Login:* `{login}`\n"
+                # Endereço individual removido para evitar redundância com a síntese
+                # bairro_cliente = cliente.get('bairro', 'N/A')
+                # endereco_cliente = cliente.get('endereco', 'N/A')
+                # mensagem += f"  *Endereço:* {endereco_cliente}, {bairro_cliente}\n"
+                mensagem += f"  *Última conexão:* {ultima_conexao_final}\n"
     else:
-        mensagem += "Listando alguns clientes:\n"
-        for cliente in clientes[:MAX_CLIENTS_IN_MESSAGE]:
-            login = cliente.get('login', 'N/A')
-            ultima_conexao_final = cliente.get('ultima_conexao_final', 'N/A')
-            mensagem += f"- *Login:* `{login}`\n"
-            mensagem += f"  *Última conexão:* {ultima_conexao_final}\n"
-        mensagem += f"... e mais {total_clientes - MAX_CLIENTS_IN_MESSAGE} clientes."
+        if status == 'offline': # Only list some clients if they are offline
+            mensagem += "Listando alguns clientes:\n"
+            for cliente in clientes[:MAX_CLIENTS_IN_MESSAGE]:
+                login = cliente.get('login', 'N/A')
+                ultima_conexao_final = cliente.get('ultima_conexao_final', 'N/A')
+                mensagem += f"- *Login:* `{login}`\n"
+                # bairro_cliente = cliente.get('bairro', 'N/A')
+                # endereco_cliente = cliente.get('endereco', 'N/A')
+                # mensagem += f"  *Endereço:* {endereco_cliente}, {bairro_cliente}\n"
+                mensagem += f"  *Última conexão:* {ultima_conexao_final}\n"
+            mensagem += f"... e mais {total_clientes - MAX_CLIENTS_IN_MESSAGE} clientes."
     
     url = f"https://api.telegram.org/bot{telegram_bot_token}/sendMessage"
     payload = {
