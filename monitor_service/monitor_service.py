@@ -33,24 +33,26 @@ def init_db():
             conexao TEXT,
             timestamp REAL,
             status TEXT,
-            logins TEXT
+            logins TEXT,
+            fetched_addresses_json TEXT
         )
     ''')
     conn.commit()
     conn.close()
 
-def save_event(event, status):
+def save_event(event, status, fetched_addresses_json=None):
     conn = sqlite3.connect("monitor_events.db")
     c = conn.cursor()
     c.execute('''
-        INSERT OR REPLACE INTO events (id, conexao, timestamp, status, logins)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT OR REPLACE INTO events (id, conexao, timestamp, status, logins, fetched_addresses_json)
+        VALUES (?, ?, ?, ?, ?, ?)
     ''', (
         event['id'],
         event.get('conexao', 'Desconhecida'),
         event.get('timestamp', time.time()),
         status,
-        json.dumps(list(event.get('logins_offline', [])))
+        json.dumps(list(event.get('logins_offline', []))),
+        fetched_addresses_json
     ))
     conn.commit()
     conn.close()
@@ -75,7 +77,7 @@ def existe_evento_ativo_para_conexao(conexao):
 def carregar_eventos_ativos():
     conn = sqlite3.connect("monitor_events.db")
     c = conn.cursor()
-    c.execute("SELECT id, conexao, timestamp, status, logins FROM events WHERE status = 'ativo'")
+    c.execute("SELECT id, conexao, timestamp, status, logins, fetched_addresses_json FROM events WHERE status = 'ativo'")
     eventos = []
     for row in c.fetchall():
         eventos.append({
@@ -84,7 +86,8 @@ def carregar_eventos_ativos():
             "timestamp": row[2],
             "status": row[3],
             "logins_offline": set(json.loads(row[4])),
-            "logins_restantes": set(json.loads(row[4]))
+            "logins_restantes": set(json.loads(row[4])),
+            "fetched_addresses_json": row[5] # Pode ser None se não houver dados
         })
     conn.close()
     return eventos
@@ -197,8 +200,10 @@ def monitor_connections():
                                 evento_existente['logins_offline'].update(novos_logins_nesta_conexao)
                                 evento_existente['logins_restantes'].update(novos_logins_nesta_conexao)
                                 
-                                save_event(evento_existente, "ativo") # Persistir a atualização no banco de dados
-                                logging.info(f"Evento {evento_existente['id']} atualizado no banco de dados com novos logins.")
+                                # Passar o fetched_addresses_json existente ao atualizar
+                                existing_addresses_json = evento_existente.get('fetched_addresses_json')
+                                save_event(evento_existente, "ativo", fetched_addresses_json=existing_addresses_json)
+                                logging.info(f"Evento {evento_existente['id']} atualizado no banco de dados com novos logins. Mantido fetched_addresses_json existente.")
 
                                 # Preparar informações para alertas atualizados
                                 # Para o Telegram, idealmente todos os clientes offline do evento
@@ -238,28 +243,11 @@ def monitor_connections():
                                 logging.error(f"Erro ao consultar OLT: {e}")
                                 motivo = "indeterminado"
 
-                        evento = {
-                            'id': str(uuid.uuid4()),
-                            'conexao': conexao,
-                            'logins_offline': set(cliente['login'] for cliente in clientes),
-                            'logins_restantes': set(cliente['login'] for cliente in clientes),
-                            'timestamp': time.time()
-                        }
-
-                        eventos_ativos.append(evento)
-                        save_event(evento, "ativo")
-                        logging.info(f"Criado novo evento {evento['id']} para conexão {conexao} com {len(clientes)} logins offline.")
-
-                        mensagem_alerta = (
-                            f"🚨 *Alerta: {len(clientes)} clientes offline detectados na conexão {conexao}.*\n"
-                            f"Motivo da queda: {motivo.capitalize()}"
-                        )
-
                         # --- BEGIN Address Fetching Logic for New Event ---
                         logging.info(f"Fetching addresses for up to 20 clients for new event in conexao {conexao}")
                         clients_for_address_lookup = clientes[:20] # Get the first 20 clients
 
-                        # This loop modifies the dictionaries within the 'clientes' list directly.
+                        # This loop modifies the dictionaries within the 'clients_for_address_lookup' list (which is a slice of 'clientes').
                         for client_to_lookup in clients_for_address_lookup:
                             client_id = client_to_lookup.get('id_cliente')
                             login_for_log = client_to_lookup.get('login', 'N/A') # For logging
@@ -267,18 +255,12 @@ def monitor_connections():
                             if client_id:
                                 address_url = f"{IXCSOFT_SERVICE_URL}/cliente/{client_id}"
                                 try:
-                                    # Assuming ixcsoft_service endpoint /cliente/{id} does not require special headers beyond what requests might send by default
-                                    # or that ixcsoft_service is not behind a gateway that needs specific auth for this internal call.
-                                    # If ixcsoft_service expects the same auth as its own external calls, headers would be needed.
-                                    # For now, let's assume no special headers are needed for this internal service-to-service call.
-                                    response = requests.get(address_url, timeout=5) # Added timeout
+                                    response = requests.get(address_url, timeout=5)
                                     response.raise_for_status()
                                     address_data = response.json()
-
                                     client_to_lookup['bairro'] = address_data.get('bairro')
                                     client_to_lookup['endereco'] = address_data.get('endereco')
                                     logging.info(f"Successfully fetched address for client ID {client_id} (Login: {login_for_log}): Bairro - {client_to_lookup['bairro']}, Endereco - {client_to_lookup['endereco']}")
-
                                 except requests.exceptions.RequestException as e:
                                     logging.error(f"Error fetching address for client ID {client_id} (Login: {login_for_log}): {e}")
                                     client_to_lookup['bairro'] = None
@@ -287,7 +269,7 @@ def monitor_connections():
                                     logging.error(f"Error decoding JSON for client ID {client_id} (Login: {login_for_log}): {e}. Response text: {response.text if 'response' in locals() else 'N/A'}")
                                     client_to_lookup['bairro'] = None
                                     client_to_lookup['endereco'] = None
-                                except Exception as e: # Catch any other unexpected error
+                                except Exception as e:
                                     logging.error(f"Unexpected error fetching address for client ID {client_id} (Login: {login_for_log}): {e}")
                                     client_to_lookup['bairro'] = None
                                     client_to_lookup['endereco'] = None
@@ -295,9 +277,41 @@ def monitor_connections():
                                 logging.warning(f"Client login {login_for_log} is missing 'id_cliente'. Cannot fetch address.")
                                 client_to_lookup['bairro'] = None
                                 client_to_lookup['endereco'] = None
+
+                        address_details_for_event = []
+                        for client_detail in clients_for_address_lookup: # Iterate through the (potentially modified) slice
+                            address_details_for_event.append({
+                                'id_cliente': client_detail.get('id_cliente'),
+                                'login': client_detail.get('login'),
+                                'bairro': client_detail.get('bairro'),
+                                'endereco': client_detail.get('endereco')
+                            })
+
+                        fetched_addresses_json_str = json.dumps(address_details_for_event)
                         # --- END Address Fetching Logic ---
 
-                        # 'clientes' list now contains updated address info for the first 20 clients
+                        evento = {
+                            'id': str(uuid.uuid4()),
+                            'conexao': conexao,
+                            'logins_offline': set(cliente['login'] for cliente in clientes), # All clients in the connection for this event
+                            'logins_restantes': set(cliente['login'] for cliente in clientes),# All clients in the connection for this event
+                            'timestamp': time.time()
+                            # fetched_addresses_json will be passed to save_event
+                        }
+
+                        eventos_ativos.append(evento)
+                        save_event(evento, "ativo", fetched_addresses_json=fetched_addresses_json_str)
+                        logging.info(f"Criado novo evento {evento['id']} para conexão {conexao} com {len(clientes)} logins offline. Fetched addresses: {fetched_addresses_json_str}")
+
+                        mensagem_alerta = (
+                            f"🚨 *Alerta: {len(clientes)} clientes offline detectados na conexão {conexao}.*\n"
+                            f"Motivo da queda: {motivo.capitalize()}"
+                        )
+
+                        # 'clients_for_address_lookup' (which is a slice of 'clientes') now contains updated address info.
+                        # The original 'clientes' list also reflects these changes for the first 20 elements if 'clients_for_address_lookup' was a direct slice.
+                        # We pass 'clientes' to send_telegram_alert which might contain more than 20 clients,
+                        # but only the first 20 (or fewer) will have 'bairro' and 'endereco' enriched.
                         send_telegram_alert(clientes, status='offline', conexao=conexao, mensagem_personalizada=mensagem_alerta)
                         send_whatsapp_alert(len(clientes), conexao, motivo)
                     else:
@@ -341,18 +355,35 @@ app = Flask(__name__)
 def get_eventos_ativos():
     conn = sqlite3.connect("monitor_events.db")
     c = conn.cursor()
-    c.execute("SELECT id, conexao, timestamp, status, logins FROM events WHERE status = 'ativo'")
+    # Ensure to select the new column for the API endpoint as well
+    c.execute("SELECT id, conexao, timestamp, status, logins, fetched_addresses_json FROM events WHERE status = 'ativo'")
     eventos = c.fetchall()
     conn.close()
 
     eventos_formatados = []
-    for evento in eventos:
+    for evento_row in eventos:
+        logins_data = []
+        try:
+            logins_data = json.loads(evento_row[4]) # logins
+        except (TypeError, json.JSONDecodeError):
+            logging.warning(f"Could not parse logins JSON for event {evento_row[0]} in API: {evento_row[4]}")
+            # Keep logins_data as empty list or handle as appropriate
+
+        fetched_addresses = None
+        if evento_row[5]: # fetched_addresses_json
+            try:
+                fetched_addresses = json.loads(evento_row[5])
+            except (TypeError, json.JSONDecodeError):
+                logging.warning(f"Could not parse fetched_addresses_json for event {evento_row[0]} in API: {evento_row[5]}")
+                # Keep fetched_addresses as None or handle as appropriate
+
         eventos_formatados.append({
-            "id": evento[0],
-            "conexao": evento[1],
-            "timestamp": evento[2],
-            "status": evento[3],
-            "logins": json.loads(evento[4])
+            "id": evento_row[0],
+            "conexao": evento_row[1],
+            "timestamp": evento_row[2],
+            "status": evento_row[3],
+            "logins": logins_data,
+            "fetched_addresses": fetched_addresses # Changed key name for clarity in API response
         })
 
     return jsonify({"eventos_ativos": eventos_formatados})

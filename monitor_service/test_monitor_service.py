@@ -10,6 +10,12 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from monitor_service import monitor_service
+# Imports needed for the new test classes that will be added later
+import sqlite3
+from monitor_service.monitor_service import init_db as actual_init_db
+from monitor_service.monitor_service import save_event as actual_save_event
+from monitor_service.monitor_service import carregar_eventos_ativos as actual_carregar_eventos_ativos
+from monitor_service.monitor_service import app as actual_app
 
 class TestMonitorService(unittest.TestCase):
 
@@ -40,10 +46,10 @@ class TestMonitorService(unittest.TestCase):
         self.mock_requests_post.return_value.raise_for_status = MagicMock()
 
         # Initialize DB (in-memory for tests if not already handled by mocks)
-        # monitor_service.init_db() # This would use the mocked connect
+        # actual_init_db() # This would use the mocked connect if not careful, as TestMonitorService mocks sqlite3.connect globally for its own tests.
 
     def tearDown(self):
-        patch.stopall()
+        patch.stopall() # This stops all patches started with start() in this test class (relevant to TestMonitorService)
 
     def _run_monitor_cycle(self, num_cycles=1):
         """Helper to run the monitor_connections loop a few times."""
@@ -315,6 +321,7 @@ class TestMonitorService(unittest.TestCase):
 
     # 5. No Action for Insufficient Clients (New Event)
     def test_no_action_insufficient_clients_new_event(self):
+        original_threshold = monitor_service.THRESHOLD_OFFLINE_CLIENTS
         monitor_service.THRESHOLD_OFFLINE_CLIENTS = 3 # Set higher for this test
         offline_clients_data = self._get_mock_clients(['clientX'], conexao_name="CONEXAO_FEW") # Only 1 client
 
@@ -339,10 +346,12 @@ class TestMonitorService(unittest.TestCase):
         for call_item in self.mock_requests_post.call_args_list:
             payload = call_item[1].get('json', {})
             self.assertNotEqual(payload.get('conexao'), "CONEXAO_FEW", "Alert sent for insufficient clients")
+        monitor_service.THRESHOLD_OFFLINE_CLIENTS = original_threshold # Restore
 
 
     # 5b. Adding Insufficient New Clients to Existing Event (Still adds them)
     def test_add_insufficient_new_clients_to_existing_event(self):
+        original_threshold = monitor_service.THRESHOLD_OFFLINE_CLIENTS
         monitor_service.THRESHOLD_OFFLINE_CLIENTS = 3 # For new event creation
         initial_timestamp = 3000.0
         self.mock_time.return_value = initial_timestamp
@@ -402,9 +411,7 @@ class TestMonitorService(unittest.TestCase):
                     'mensagem_personalizada': expected_telegram_message
                 }
             )
-
-                }
-            )
+        monitor_service.THRESHOLD_OFFLINE_CLIENTS = original_threshold # Restore
 
     def test_address_fetching_for_new_event_scenarios(self):
         # This test will cover multiple scenarios for address fetching
@@ -626,4 +633,260 @@ class TestMonitorService(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
 
+
+# Define the database file path for the new tests
+DB_FILE_NEW_TESTS = "monitor_events_fortests.db"
+
+# Path to the main service can be taken from monitor_service.DB_FILE if needed by helper functions,
+# but these tests aim to modify it for isolation.
+
+class TestMonitorServiceDBOperations(unittest.TestCase):
+
+    def setUp(self):
+        """Set up for test methods."""
+        # Ensure a clean database for each test
+        if os.path.exists(DB_FILE_NEW_TESTS):
+            os.remove(DB_FILE_NEW_TESTS)
+
+        # The key here is that actual_init_db uses the *original* sqlite3.connect,
+        # not one that might have been mocked by TestMonitorService if unittest test loading
+        # doesn't perfectly isolate class setups.
+        # The setUpClass/tearDownClass now handles DB_FILE redirection for service functions.
+        actual_init_db()
+
+    def tearDown(self):
+        """Tear down after test methods."""
+        if os.path.exists(DB_FILE_NEW_TESTS):
+            os.remove(DB_FILE_NEW_TESTS)
+
+    @classmethod
+    def setUpClass(cls):
+        # Override the DB_FILE path used by the actual service functions for this test class.
+        # This is to ensure that init_db, save_event, carregar_eventos_ativos called by these
+        # tests use the temporary DB_FILE_NEW_TESTS.
+        cls.original_db_path_in_service_module = monitor_service.DB_FILE
+        monitor_service.DB_FILE = DB_FILE_NEW_TESTS
+
+    @classmethod
+    def tearDownClass(cls):
+        # Restore the original DB_FILE path in the service module
+        monitor_service.DB_FILE = cls.original_db_path_in_service_module
+        # Final cleanup of the test DB file, if it still exists
+        if os.path.exists(DB_FILE_NEW_TESTS):
+            os.remove(DB_FILE_NEW_TESTS)
+
+    def test_init_db_creates_address_column(self):
+        """Test if init_db creates the fetched_addresses_json column."""
+        # actual_init_db() was called in setUp ensuring the table (and column) should exist.
+        conn = sqlite3.connect(DB_FILE_NEW_TESTS) # Connect directly to the test DB
+        c = conn.cursor()
+        c.execute("PRAGMA table_info(events);")
+        columns_info = c.fetchall()
+        conn.close()
+
+        column_names = [info[1] for info in columns_info]
+        column_types = {info[1]: info[2] for info in columns_info}
+
+        self.assertIn("fetched_addresses_json", column_names)
+        self.assertEqual(column_types.get("fetched_addresses_json"), "TEXT")
+
+    def test_save_and_load_event_with_addresses(self):
+        """Test saving an event with address data and loading it."""
+        event_id = str(uuid.uuid4())
+        conexao = "TestConexao_SaveLoad"
+        timestamp = time.time()
+        logins_offline = ["user1", "user2"]
+
+        address_details = [
+            {'id_cliente': 1, 'login': 'user1', 'bairro': 'Centro', 'endereco': 'Rua A, 123'},
+            {'id_cliente': 2, 'login': 'user2', 'bairro': 'Vila', 'endereco': 'Rua B, 456'}
+        ]
+        fetched_addresses_json_str = json.dumps(address_details)
+
+        sample_event_data = {
+            'id': event_id,
+            'conexao': conexao,
+            'timestamp': timestamp,
+            'logins_offline': set(logins_offline)
+        }
+
+        # Use the actual save_event which now operates on DB_FILE_NEW_TESTS due to setUpClass
+        actual_save_event(sample_event_data, "ativo", fetched_addresses_json=fetched_addresses_json_str)
+
+        # Verify directly in DB
+        conn = sqlite3.connect(DB_FILE_NEW_TESTS)
+        c = conn.cursor()
+        c.execute("SELECT fetched_addresses_json FROM events WHERE id = ?", (event_id,))
+        result = c.fetchone()
+        conn.close()
+
+        self.assertIsNotNone(result)
+        self.assertEqual(result[0], fetched_addresses_json_str)
+
+        # Verify using actual_carregar_eventos_ativos
+        loaded_events = actual_carregar_eventos_ativos()
+        self.assertEqual(len(loaded_events), 1)
+        loaded_event = loaded_events[0]
+
+        self.assertEqual(loaded_event['id'], event_id)
+        self.assertEqual(loaded_event['fetched_addresses_json'], fetched_addresses_json_str)
+        self.assertEqual(loaded_event['conexao'], conexao)
+        self.assertEqual(loaded_event['status'], "ativo")
+        self.assertEqual(loaded_event['logins_offline'], set(logins_offline))
+
+
+    def test_update_event_preserves_addresses(self):
+        """Test that updating an event preserves the original fetched_addresses_json."""
+        event_id = str(uuid.uuid4())
+        conexao = "TestConexao_Update"
+        initial_logins = ["userA"]
+        address_details_initial = [
+            {'id_cliente': 10, 'login': 'userA', 'bairro': 'Industrial', 'endereco': 'Av X, 789'}
+        ]
+        fetched_addresses_json_initial_str = json.dumps(address_details_initial)
+
+        event_original = {
+            'id': event_id,
+            'conexao': conexao,
+            'timestamp': time.time(),
+            'logins_offline': set(initial_logins)
+            # 'fetched_addresses_json' is not part of the core event dict for this stage
+        }
+        actual_save_event(event_original, "ativo", fetched_addresses_json=fetched_addresses_json_initial_str)
+
+        loaded_event_before_update = actual_carregar_eventos_ativos()[0]
+
+        # Simulate an update: add more offline logins
+        # Create the event structure for saving, ensuring all necessary fields are present
+        event_to_update = {
+            'id': loaded_event_before_update['id'],
+            'conexao': loaded_event_before_update['conexao'],
+            'timestamp': loaded_event_before_update['timestamp'],
+            'logins_offline': loaded_event_before_update['logins_offline'].copy() # use existing logins_offline
+        }
+        event_to_update['logins_offline'].add("userB")
+
+        # Pass the original fetched_addresses_json from the loaded event
+        actual_save_event(event_to_update, "ativo", fetched_addresses_json=loaded_event_before_update.get('fetched_addresses_json'))
+
+        loaded_events_after_update = actual_carregar_eventos_ativos()
+        self.assertEqual(len(loaded_events_after_update), 1)
+        loaded_event_after_update = loaded_events_after_update[0]
+
+        self.assertEqual(loaded_event_after_update['fetched_addresses_json'], fetched_addresses_json_initial_str)
+        self.assertEqual(loaded_event_after_update['logins_offline'], {'userA', 'userB'})
+
+    def test_save_event_without_addresses(self):
+        """Test saving an event without address data (it should store NULL or None)."""
+        event_id = str(uuid.uuid4())
+        sample_event_data = {
+            'id': event_id,
+            'conexao': "TestConexao_NoAddress",
+            'logins_offline': set(["userC"])
+        }
+        actual_save_event(sample_event_data, "ativo") # fetched_addresses_json defaults to None
+
+        loaded_events = actual_carregar_eventos_ativos()
+        self.assertEqual(len(loaded_events), 1)
+        loaded_event = loaded_events[0]
+
+        self.assertIsNone(loaded_event['fetched_addresses_json'])
+
+        conn = sqlite3.connect(DB_FILE_NEW_TESTS)
+        c = conn.cursor()
+        c.execute("SELECT fetched_addresses_json FROM events WHERE id = ?", (event_id,))
+        result = c.fetchone()
+        conn.close()
+        self.assertIsNotNone(result)
+        self.assertIsNone(result[0])
+
+
+class TestMonitorServiceAPI(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.original_db_path_in_service_module = monitor_service.DB_FILE
+        monitor_service.DB_FILE = DB_FILE_NEW_TESTS
+
+    @classmethod
+    def tearDownClass(cls):
+        monitor_service.DB_FILE = cls.original_db_path_in_service_module
+        if os.path.exists(DB_FILE_NEW_TESTS):
+            os.remove(DB_FILE_NEW_TESTS)
+
+    def setUp(self):
+        if os.path.exists(DB_FILE_NEW_TESTS):
+            os.remove(DB_FILE_NEW_TESTS)
+
+        actual_init_db()
+
+        actual_app.testing = True
+        self.client = actual_app.test_client()
+
+    def tearDown(self):
+        # DB file removal is handled by tearDownClass or next setUp,
+        # but individual test cleanup can be added if needed.
+        pass
+
+
+    def test_api_get_eventos_ativos_includes_addresses(self):
+        """Test /eventos/ativos API endpoint retrieves events with parsed address details."""
+        event_id = str(uuid.uuid4())
+        conexao = "API_TestConexao"
+        address_details = [
+            {'id_cliente': 101, 'login': 'api_user1', 'bairro': 'Digital', 'endereco': 'Rua Teste API, 101'}
+        ]
+        fetched_addresses_json_str = json.dumps(address_details)
+
+        test_event = {
+            'id': event_id,
+            'conexao': conexao,
+            'timestamp': time.time(),
+            'logins_offline': set(['api_user1'])
+        }
+        actual_save_event(test_event, "ativo", fetched_addresses_json=fetched_addresses_json_str)
+
+        response = self.client.get('/eventos/ativos')
+        self.assertEqual(response.status_code, 200)
+
+        data = json.loads(response.data.decode('utf-8'))
+        self.assertIn("eventos_ativos", data)
+
+        api_events = data["eventos_ativos"]
+        self.assertEqual(len(api_events), 1)
+
+        api_event = api_events[0]
+        self.assertEqual(api_event['id'], event_id)
+        self.assertEqual(api_event['conexao'], conexao)
+        self.assertIn('fetched_addresses', api_event) # Key in API response
+        self.assertEqual(api_event['fetched_addresses'], address_details)
+        self.assertEqual(api_event['logins'], ['api_user1'])
+
+    def test_api_get_eventos_ativos_empty(self):
+        """Test /eventos/ativos API endpoint when no active events."""
+        response = self.client.get('/eventos/ativos')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data.decode('utf-8'))
+        self.assertIn("eventos_ativos", data)
+        self.assertEqual(len(data["eventos_ativos"]), 0)
+
+    def test_api_get_eventos_ativos_no_addresses_stored(self):
+        """Test API when an event has NULL for fetched_addresses_json."""
+        event_id = str(uuid.uuid4())
+        test_event = {
+            'id': event_id,
+            'conexao': "API_NoAddressData",
+            'timestamp': time.time(),
+            'logins_offline': set(['no_addr_user'])
+        }
+        actual_save_event(test_event, "ativo", fetched_addresses_json=None)
+
+        response = self.client.get('/eventos/ativos')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data.decode('utf-8'))
+        api_event = data["eventos_ativos"][0]
+
+        self.assertEqual(api_event['id'], event_id)
+        self.assertIn('fetched_addresses', api_event)
+        self.assertIsNone(api_event['fetched_addresses'])
 ```
